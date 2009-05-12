@@ -59,9 +59,8 @@ public class TestLogger {
 	
 	
 	
-	public static void shutdown() {
+	public void shutdown() {
 		logger.getLoggerRepository().shutdown();
-		logger = null;
 	}
 	
 	

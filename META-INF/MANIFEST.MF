@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GlobalTester Logging
+Bundle-SymbolicName: org.globaltester.logging;singleton:=true
+Bundle-Version: 2.1.0
+Bundle-Activator: org.globaltester.logging.Activator
+Bundle-Vendor: HJP Consulting GmbH
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Bundle-ClassPath: lib/log4j-1.2.14.jar,
+ .
+Export-Package: org.globaltester.logger,
+ org.globaltester.logging

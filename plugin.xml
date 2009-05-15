@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   
+
+ <extension
+       point="org.eclipse.ui.preferencePages">
+    <page
+		name="Logging"
+		category="org.globaltester.preferences.GlobalTesterPreferencePage"
+		class="org.globaltester.logging.preferences.GlobalTesterPreferencePageLogging"
+    	id="org.globaltester.logging.preferences.GlobalTesterPreferencePageLogging">
+    </page>
+ </extension>
+ <extension
+       point="org.eclipse.core.runtime.preferences">
+    <initializer
+          class="org.globaltester.logging.preferences.PreferenceInitializer">
+    </initializer>
+ </extension>
+</plugin>

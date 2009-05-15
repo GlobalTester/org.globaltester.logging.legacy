@@ -192,6 +192,11 @@ public class TestLogger {
 		logger.removeAllAppenders();
 		Logger.getRootLogger().removeAllAppenders();
 
+		//set the loglevel
+		String level = PreferenceConstants.LOGLEVELS[store
+				.getInt(PreferenceConstants.P_TEST_LOGLEVEL)];
+		logger.setLevel(Level.toLevel(level));
+
 		//configure filenames according to preferences
 		setFileNames();
 
@@ -236,12 +241,30 @@ public class TestLogger {
 	}
 
 	/**
+	 * Sets the logging level according to preferences
+	 */
+	public static void setLevel() {
+		if (logger == null) {
+			return;
+		}
+
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		String level = PreferenceConstants.LOGLEVELS[store
+				.getInt(PreferenceConstants.P_GT_LOGLEVEL)];
+		logger.setLevel(Level.toLevel(level));
+	}
+
+	/**
 	 * Setter for Level of log4J
 	 * 
 	 * @param level
 	 *            of logging
 	 */
 	public static void setLevel(String level) {
+
+		if (logger == null) {
+			return;
+		}
 
 		if (level.equals("TRACE")) {
 			logger.setLevel(Level.TRACE);
@@ -304,6 +327,7 @@ public class TestLogger {
 	 * private default Constructor makes sure this class is not instantiated
 	 */
 	private TestLogger() {
+
 	}
 
 	public static String getLogFileName() {

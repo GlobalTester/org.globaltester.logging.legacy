@@ -67,6 +67,9 @@ public class GTLogger {
 		//get the preference store
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
+		//set the loglevel
+		setLevel();
+
 		//configure filenames according to preferences
 		setFileNames();
 
@@ -114,6 +117,7 @@ public class GTLogger {
 		} else {
 			htmlFileName = "";
 		}
+
 	}
 
 	/**
@@ -236,6 +240,16 @@ public class GTLogger {
 	}
 
 	/**
+	 * Sets the logging level according to preferences
+	 */
+	public void setLevel() {
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		String level = PreferenceConstants.LOGLEVELS[store
+				.getInt(PreferenceConstants.P_GT_LOGLEVEL)];
+		logger.setLevel(Level.toLevel(level));
+	}
+
+	/**
 	 * Setter for Level of log4J
 	 * 
 	 * @param level
@@ -291,7 +305,6 @@ public class GTLogger {
 		if (manualDirSettings) {
 			logDir = store.getString(PreferenceConstants.P_GT_LOGGINGDIR);
 		} else {
-			//TODO AM check whether this works
 			logDir = Platform.getLocation().append(".metadata").toString();
 		}
 
@@ -313,4 +326,5 @@ public class GTLogger {
 		Calendar cal = Calendar.getInstance();
 		return sdf.format(cal.getTime());
 	}
+
 }

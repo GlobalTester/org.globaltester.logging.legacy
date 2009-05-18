@@ -311,8 +311,6 @@ public class GTLogger {
 		//build the filenames
 		htmlFileName = logDir + "/gt_log.html";
 		logFileName = logDir + "/globaltester.log";
-		System.out.println(htmlFileName);
-		System.out.println(logFileName);
 	}
 
 	/**

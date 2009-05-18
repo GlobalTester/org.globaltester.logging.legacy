@@ -83,6 +83,7 @@ public class TestLogger {
 	 * call to init()
 	 */
 	public static void shutdown() {
+		logger.removeAllAppenders();
 		logger = null;
 	}
 

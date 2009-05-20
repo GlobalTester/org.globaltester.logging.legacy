@@ -12,7 +12,6 @@ package org.globaltester.logger;
  * Non-Disclosure Agreement you entered into with HJP.
  */
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 
 import org.apache.log4j.BasicConfigurator;
@@ -22,15 +21,12 @@ import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.apache.log4j.WriterAppender;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.globaltester.logging.Activator;
 import org.globaltester.logging.preferences.PreferenceConstants;
 
 /**
- * This class implements methods for logging of GT components.
- * 
- * Logging regarding TestExecution should be done wit TestLogger
+ * This class implements methods for logging of messages regarding TestExecution
  * 
  * @version Release 2.2.0
  * @author Alexander May
@@ -39,6 +35,9 @@ import org.globaltester.logging.preferences.PreferenceConstants;
 
 public class TestLogger {
 
+	private static final String APPENDER_PLAIN = "TestLogger_Plain_Appender";
+	private static final String APPENDER_HTML = "TestLogger_HTML_Appender";
+
 	// Logger
 	private static Logger logger = null;
 
@@ -46,7 +45,7 @@ public class TestLogger {
 	private static String logDir;
 	private static String htmlFileName;
 	private static String logFileName;
-
+	
 	private static boolean isInitialized() {
 		if (logger == null) {
 			GTLogger.getInstance().warn(
@@ -212,9 +211,9 @@ public class TestLogger {
 		// settings for 'plain' logging
 		if (store.getBoolean(PreferenceConstants.P_TEST_PLAINLOGGING)) {
 			try {
-				FileAppender fileAppender = new FileAppender(fileLayout,
-						logFileName);
-				logger.addAppender(fileAppender);
+				FileAppender fileAppenderPlain = new FileAppender(fileLayout, logFileName);
+				fileAppenderPlain.setName(APPENDER_PLAIN);
+				logger.addAppender(fileAppenderPlain);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -226,15 +225,14 @@ public class TestLogger {
 		if (store.getBoolean(PreferenceConstants.P_TEST_HTMLLOGGING)) {
 			HTMLLayout htmlLayout = new HTMLLayout();
 			htmlLayout.setTitle(htmlFileName);
-			WriterAppender writerAppender = null;
 			try {
-				FileOutputStream output = new FileOutputStream(htmlFileName);
-				writerAppender = new WriterAppender(htmlLayout, output);
+				FileAppender fileAppenderHtml = new FileAppender(htmlLayout, htmlFileName);
+				fileAppenderHtml.setName(APPENDER_HTML);
+				logger.addAppender(fileAppenderHtml);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			writerAppender.activateOptions();
-			logger.addAppender(writerAppender);
+
 		} else {
 			htmlFileName = "";
 		}

@@ -12,7 +12,6 @@ package org.globaltester.logger;
  * Non-Disclosure Agreement you entered into with HJP.
  */
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -24,7 +23,6 @@ import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
-import org.apache.log4j.WriterAppender;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.globaltester.logging.Activator;
@@ -41,6 +39,11 @@ import org.globaltester.logging.preferences.PreferenceConstants;
  */
 
 public class GTLogger {
+
+	private static final String APPENDER_PLAIN = "GTLogger_Plain_Appender";
+	private static final String APPENDER_HTML = "GTLogger_HTML_Appender";
+	private static final String APPENDER_CONSOLE = "GTLogger_Console_Appender";
+
 	// single existing instance
 	private static GTLogger instance;
 
@@ -51,6 +54,10 @@ public class GTLogger {
 
 	// Logger
 	private Logger logger;
+
+	private FileAppender fileAppenderPlain;
+	private FileAppender fileAppenderHtml;
+	private ConsoleAppender consoleAppender;
 
 	/**
 	 * Constructor
@@ -64,59 +71,8 @@ public class GTLogger {
 		logger.removeAllAppenders();
 		Logger.getRootLogger().removeAllAppenders();
 
-		//get the preference store
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-
-		//set the loglevel
-		setLevel();
-
-		//configure filenames according to preferences
-		setFileNames();
-
-		// settings for logfiles		
-		Layout fileLayout;
-		if (store.getBoolean(PreferenceConstants.P_GT_USEISO8601LOGGING)) {
-			fileLayout = new PatternLayout("%d %-5p - %m%n");
-		} else {
-			fileLayout = new PatternLayout("%m%n");
-		}
-
-		// settings for 'plain' logging
-		if (store.getBoolean(PreferenceConstants.P_GT_PLAINLOGGING)) {
-			try {
-				FileAppender fileAppender = new FileAppender(fileLayout,
-						logFileName);
-				logger.addAppender(fileAppender);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			logFileName = "";
-		}
-
-		// settings for 'console' logging
-		if (store.getBoolean(PreferenceConstants.P_GT_CONSOLELOGGING)) {
-			ConsoleAppender consoleAppender = new ConsoleAppender(fileLayout);
-			logger.addAppender(consoleAppender);
-
-		}
-
-		//settings for html file
-		if (store.getBoolean(PreferenceConstants.P_GT_HTMLLOGGING)) {
-			HTMLLayout htmlLayout = new HTMLLayout();
-			htmlLayout.setTitle(htmlFileName);
-			WriterAppender writerAppender = null;
-			try {
-				FileOutputStream output = new FileOutputStream(htmlFileName);
-				writerAppender = new WriterAppender(htmlLayout, output);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			writerAppender.activateOptions();
-			logger.addAppender(writerAppender);
-		} else {
-			htmlFileName = "";
-		}
+		//initialize all appenders with the options from preferences
+		checkOptions();
 
 	}
 
@@ -324,5 +280,78 @@ public class GTLogger {
 		Calendar cal = Calendar.getInstance();
 		return sdf.format(cal.getTime());
 	}
+
+	public void checkOptions() {
+		//get the preference store
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+
+		//set the loglevel
+		setLevel();
+
+		//configure filenames according to preferences
+		setFileNames();
+
+		// setting logfile layout		
+		Layout fileLayout;
+		if (store.getBoolean(PreferenceConstants.P_GT_USEISO8601LOGGING)) {
+			fileLayout = new PatternLayout("%d %-5p - %m%n");
+		} else {
+			fileLayout = new PatternLayout("%m%n");
+		}
+
+		// settings for 'plain' logging
+		if (store.getBoolean(PreferenceConstants.P_GT_PLAINLOGGING)) {
+			if (fileAppenderPlain == null) {
+				try {
+					fileAppenderPlain = new FileAppender(fileLayout,
+							logFileName);
+					fileAppenderPlain.setName(APPENDER_PLAIN);
+					logger.addAppender(fileAppenderPlain);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} else {
+				fileAppenderPlain.setLayout(fileLayout);
+				fileAppenderPlain.setFile(logFileName);
+			}
+		} else {
+			logFileName = "";
+			logger.removeAppender(APPENDER_PLAIN);
+		}
+
+		// settings for 'console' logging
+		if (store.getBoolean(PreferenceConstants.P_GT_CONSOLELOGGING)) {
+			if (consoleAppender == null) {
+				consoleAppender = new ConsoleAppender(fileLayout);
+				consoleAppender.setName(APPENDER_CONSOLE);
+				logger.addAppender(consoleAppender);
+			}
+			consoleAppender.setLayout(fileLayout);
+		} else {
+			logger.removeAppender(APPENDER_CONSOLE);
+		}
+
+		//settings for html file
+		if (store.getBoolean(PreferenceConstants.P_GT_HTMLLOGGING)) {
+			if (fileAppenderHtml == null) {
+				HTMLLayout htmlLayout = new HTMLLayout();
+				htmlLayout.setTitle(htmlFileName);
+				try {
+					fileAppenderHtml = new FileAppender(htmlLayout,
+							htmlFileName);
+					fileAppenderHtml.setName(APPENDER_HTML);
+					logger.addAppender(fileAppenderHtml);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			fileAppenderHtml.setFile(htmlFileName);
+		} else {
+			htmlFileName = "";
+			logger.removeAppender(APPENDER_HTML);
+		}
+
+	}
+	
 
 }

@@ -22,6 +22,7 @@ import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -162,28 +163,33 @@ public class GlobalTesterPreferencePageLogging extends
 				PreferenceConstants.LOGLEVEL_FATAL, 1, 1);
 		addField(sfeFrameworkLogLevel);
 
-		//TODO AM create these labels for different loglevels
-		/*
-		 * for (int i = 0; i < PreferenceConstants.LOGLEVELS.length; i++) {
-		 * Label lbl = new Label(frameworkOptionsGroup, SWT.CENTER);
-		 * lbl.setText(PreferenceConstants.LOGLEVELS[i]); }
-		 */
-
-		GridData gdSpan3 = new GridData(GridData.FILL, GridData.FILL, true,
+		//create caption for the loglevel scale field
+		Composite labelComposite1 = new Composite(frameworkOptionsGroup,
+				SWT.NONE);
+		labelComposite1.setLayout(new FillLayout(SWT.HORIZONTAL));
+		GridData labelData1 = new GridData(GridData.FILL, GridData.FILL, true,
 				false);
-		//gdSpan3.horizontalSpan=3;
+		labelData1.horizontalSpan = 2;
+		labelData1.grabExcessHorizontalSpace = true;
+		labelComposite1.setLayoutData(labelData1);
+		//add each label followed by an empty spacer label
+		for (int i = 0; i < PreferenceConstants.LOGLEVELS.length; i++) {
+			Label lbl = new Label(labelComposite1, SWT.CENTER);
+			lbl.setText(PreferenceConstants.LOGLEVELS[i]);
+			if (i + 1 < PreferenceConstants.LOGLEVELS.length) {
+				new Label(labelComposite1, SWT.CENTER);
+			}
+		}
+
 		lblFrameworkMinLevel = new Label(frameworkOptionsGroup, SWT.LEFT);
-		lblFrameworkMinLevel.setText(PreferenceConstants.LOGLEVELS[0]
-				+ "\neverything is logged");
-		lblFrameworkMinLevel.setLayoutData(gdSpan3);
+		lblFrameworkMinLevel.setText("everything is logged");
+		lblFrameworkMinLevel.setLayoutData(new GridData(GridData.FILL,
+				GridData.FILL, true, false));
 
 		lblFrameworkMaxLevel = new Label(frameworkOptionsGroup, SWT.RIGHT);
-		lblFrameworkMaxLevel
-				.setText(PreferenceConstants.LOGLEVELS[PreferenceConstants.LOGLEVELS.length - 1]
-						+ "\nonly fatal problems are logged");
+		lblFrameworkMaxLevel.setText("only fatal problems are logged");
 		lblFrameworkMaxLevel.setLayoutData(new GridData(GridData.END,
 				GridData.FILL, true, false));
-		lblFrameworkMaxLevel.setLayoutData(gdSpan3);
 
 		//preferences for logging of tests
 		testOptionsGroup = new Group(container, SWT.NONE);
@@ -218,15 +224,32 @@ public class GlobalTesterPreferencePageLogging extends
 				testOptionsGroup, PreferenceConstants.LOGLEVEL_TRACE,
 				PreferenceConstants.LOGLEVEL_FATAL, 1, 1);
 		addField(sfeTestLogLevel);
+		
+		//create caption for the loglevel scale field
+		Composite labelComposite2 = new Composite(testOptionsGroup,
+				SWT.NONE);
+		labelComposite2.setLayout(new FillLayout(SWT.HORIZONTAL));
+		GridData labelData2 = new GridData(GridData.FILL, GridData.FILL, true,
+				false);
+		labelData2.horizontalSpan = 2;
+		labelData2.grabExcessHorizontalSpace = true;
+		labelComposite2.setLayoutData(labelData2);
+		//add each label followed by an empty spacer label
+		for (int i = 0; i < PreferenceConstants.LOGLEVELS.length; i++) {
+			Label lbl = new Label(labelComposite2, SWT.CENTER);
+			lbl.setText(PreferenceConstants.LOGLEVELS[i]);
+			if (i + 1 < PreferenceConstants.LOGLEVELS.length) {
+				new Label(labelComposite2, SWT.CENTER);
+			}
+		}
 
 		lblTestMinLevel = new Label(testOptionsGroup, SWT.LEFT);
-		lblTestMinLevel.setText(PreferenceConstants.LOGLEVELS[0]
-				+ "\neverything is logged");
+		lblTestMinLevel.setText("everything is logged");
+		lblTestMinLevel.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL,
+				true, false));
 
 		lblTestMaxLevel = new Label(testOptionsGroup, SWT.RIGHT);
-		lblTestMaxLevel
-				.setText(PreferenceConstants.LOGLEVELS[PreferenceConstants.LOGLEVELS.length - 1]
-						+ "\nonly fatal problems are logged");
+		lblTestMaxLevel.setText("only fatal problems are logged");
 		lblTestMaxLevel.setLayoutData(new GridData(GridData.END, GridData.FILL,
 				true, false));
 
@@ -306,7 +329,7 @@ public class GlobalTesterPreferencePageLogging extends
 	}
 
 	public boolean performOk() {
-		boolean retVal = super.performOk();		
+		boolean retVal = super.performOk();
 
 		//adapt values for test logging when same options are selected
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
@@ -320,10 +343,10 @@ public class GlobalTesterPreferencePageLogging extends
 			store.setValue(PreferenceConstants.P_TEST_USEISO8601LOGGING, store
 					.getBoolean(PreferenceConstants.P_GT_USEISO8601LOGGING));
 		}
-		
+
 		//make sure that loggers change their options accordingly
 		GTLogger.getInstance().checkOptions();
-		
+
 		return retVal;
 	}
 

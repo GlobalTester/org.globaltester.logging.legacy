@@ -46,7 +46,7 @@ public class TestLogger {
 	private static String htmlFileName;
 	private static String logFileName;
 	
-	private static boolean isInitialized() {
+	public static boolean isInitialized() {
 		if (logger == null) {
 			GTLogger.getInstance().warn(
 					"The TestLogger is not properly initialized:");

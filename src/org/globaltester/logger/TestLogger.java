@@ -45,7 +45,7 @@ public class TestLogger {
 	private static String logDir;
 	private static String htmlFileName;
 	private static String logFileName;
-	
+
 	public static boolean isInitialized() {
 		if (logger == null) {
 			GTLogger.getInstance().warn(
@@ -82,7 +82,9 @@ public class TestLogger {
 	 * call to init()
 	 */
 	public static void shutdown() {
-		logger.removeAllAppenders();
+		if (logger != null) {
+			logger.removeAllAppenders();
+		}
 		logger = null;
 	}
 
@@ -211,7 +213,8 @@ public class TestLogger {
 		// settings for 'plain' logging
 		if (store.getBoolean(PreferenceConstants.P_TEST_PLAINLOGGING)) {
 			try {
-				FileAppender fileAppenderPlain = new FileAppender(fileLayout, logFileName);
+				FileAppender fileAppenderPlain = new FileAppender(fileLayout,
+						logFileName);
 				fileAppenderPlain.setName(APPENDER_PLAIN);
 				logger.addAppender(fileAppenderPlain);
 			} catch (IOException e) {
@@ -226,7 +229,8 @@ public class TestLogger {
 			HTMLLayout htmlLayout = new HTMLLayout();
 			htmlLayout.setTitle(htmlFileName);
 			try {
-				FileAppender fileAppenderHtml = new FileAppender(htmlLayout, htmlFileName);
+				FileAppender fileAppenderHtml = new FileAppender(htmlLayout,
+						htmlFileName);
 				fileAppenderHtml.setName(APPENDER_HTML);
 				logger.addAppender(fileAppenderHtml);
 			} catch (Exception e) {

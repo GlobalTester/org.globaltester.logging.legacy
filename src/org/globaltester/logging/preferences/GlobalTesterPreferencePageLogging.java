@@ -36,7 +36,7 @@ import org.globaltester.logging.Activator;
 /**
  * This class stores the properties of the plugin
  * 
- * @version Release 2.1.1
+ * @version Release 2.2.0
  * @author Holger Funke
  * 
  */

@@ -11,6 +11,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/log4j-1.2.14.jar,
  .
-Export-Package: org.globaltester.logger,
+Export-Package: org.apache.log4j,
+ org.globaltester.logger,
  org.globaltester.logging,
  org.globaltester.logging.preferences

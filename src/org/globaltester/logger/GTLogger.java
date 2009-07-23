@@ -12,6 +12,7 @@ package org.globaltester.logger;
  * Non-Disclosure Agreement you entered into with HJP.
  */
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 
@@ -267,6 +268,16 @@ public class GTLogger {
 		//build the filenames
 		htmlFileName = logDir + "/gt_log.html";
 		logFileName = logDir + "/globaltester.log";
+
+		//remove existing files
+		File htmlLogFile = new File(htmlFileName);
+		if (htmlLogFile.exists()) {
+			htmlLogFile.delete();
+		}
+		File logFile = new File(logFileName);
+		if (logFile.exists()) {
+			logFile.delete();
+		}
 	}
 
 	/**
@@ -352,6 +363,5 @@ public class GTLogger {
 		}
 
 	}
-	
 
 }

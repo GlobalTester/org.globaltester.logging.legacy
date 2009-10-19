@@ -50,19 +50,10 @@ public class GlobalTesterPreferencePageLogging extends
 	DirectoryFieldEditor dfeFrameworkLoggingDir;
 	DirectoryFieldEditor dfeTestLoggingDir;
 
-	//editors for framework logging options
-	Group frameworkOptionsGroup;
-	BooleanFieldEditor bfeFrameworkHtmlLogger;
-	BooleanFieldEditor bfeFrameworkPlainLogger;
-	BooleanFieldEditor bfeFrameworkISO8601Logging;
-	BooleanFieldEditor bfeFrameworkConsoleLogger;
-	ScaleFieldEditor sfeFrameworkLogLevel;
-	Label lblFrameworkMinLevel;
-	Label lblFrameworkMaxLevel;
 
 	//editors for test logging options
 	Group testOptionsGroup;
-	BooleanFieldEditor bfeTestSameOptions;
+	BooleanFieldEditor bfeTestPersistentMarker;
 	BooleanFieldEditor bfeTestHtmlLogger;
 	BooleanFieldEditor bfeTestPlainLogger;
 	BooleanFieldEditor bfeTestISO8601Logging;
@@ -129,68 +120,7 @@ public class GlobalTesterPreferencePageLogging extends
 		addField(dfeFrameworkLoggingDir);
 		addField(dfeTestLoggingDir);
 
-		//preferences for logging of framework (independent from test runs)
-		frameworkOptionsGroup = new Group(container, SWT.NONE);
-		frameworkOptionsGroup.setText("Logging of GlobalTester Framework");
-		GridData gd2 = new GridData(GridData.FILL, GridData.FILL, true, false);
-		gd2.horizontalSpan = 2;
-		frameworkOptionsGroup.setLayoutData(gd2);
-		frameworkOptionsGroup.setLayout(new GridLayout(15, false));
-
-		bfeFrameworkHtmlLogger = new BooleanFieldEditor(
-				PreferenceConstants.P_GT_HTMLLOGGING,
-				"Activate additional HTML log file", frameworkOptionsGroup);
-		addField(bfeFrameworkHtmlLogger);
-
-		bfeFrameworkPlainLogger = new BooleanFieldEditor(
-				PreferenceConstants.P_GT_PLAINLOGGING,
-				"Use standard logging (plain text file)", frameworkOptionsGroup);
-		addField(bfeFrameworkPlainLogger);
-
-		bfeFrameworkISO8601Logging = new BooleanFieldEditor(
-				PreferenceConstants.P_GT_USEISO8601LOGGING,
-				"Use ISO 8601 logging in text file", frameworkOptionsGroup);
-		addField(bfeFrameworkISO8601Logging);
-
-		bfeFrameworkConsoleLogger = new BooleanFieldEditor(
-				PreferenceConstants.P_GT_CONSOLELOGGING,
-				"Activate additional logging to STDOUT", frameworkOptionsGroup);
-		addField(bfeFrameworkConsoleLogger);
-
-		sfeFrameworkLogLevel = new ScaleFieldEditor(
-				PreferenceConstants.P_GT_LOGLEVEL, "Level of logging",
-				frameworkOptionsGroup, PreferenceConstants.LOGLEVEL_TRACE,
-				PreferenceConstants.LOGLEVEL_FATAL, 1, 1);
-		addField(sfeFrameworkLogLevel);
-
-		//create caption for the loglevel scale field
-		Composite labelComposite1 = new Composite(frameworkOptionsGroup,
-				SWT.NONE);
-		labelComposite1.setLayout(new FillLayout(SWT.HORIZONTAL));
-		GridData labelData1 = new GridData(GridData.FILL, GridData.FILL, true,
-				false);
-		labelData1.horizontalSpan = 2;
-		labelData1.grabExcessHorizontalSpace = true;
-		labelComposite1.setLayoutData(labelData1);
-		//add each label followed by an empty spacer label
-		for (int i = 0; i < PreferenceConstants.LOGLEVELS.length; i++) {
-			Label lbl = new Label(labelComposite1, SWT.CENTER);
-			lbl.setText(PreferenceConstants.LOGLEVELS[i]);
-			if (i + 1 < PreferenceConstants.LOGLEVELS.length) {
-				new Label(labelComposite1, SWT.CENTER);
-			}
-		}
-
-		lblFrameworkMinLevel = new Label(frameworkOptionsGroup, SWT.LEFT);
-		lblFrameworkMinLevel.setText("everything is logged");
-		lblFrameworkMinLevel.setLayoutData(new GridData(GridData.FILL,
-				GridData.FILL, true, false));
-
-		lblFrameworkMaxLevel = new Label(frameworkOptionsGroup, SWT.RIGHT);
-		lblFrameworkMaxLevel.setText("only fatal problems are logged");
-		lblFrameworkMaxLevel.setLayoutData(new GridData(GridData.END,
-				GridData.FILL, true, false));
-
+		
 		//preferences for logging of tests
 		testOptionsGroup = new Group(container, SWT.NONE);
 		testOptionsGroup.setText("Logging of test runs");
@@ -199,10 +129,10 @@ public class GlobalTesterPreferencePageLogging extends
 		testOptionsGroup.setLayoutData(gd3);
 		testOptionsGroup.setLayout(new GridLayout(2, false));
 
-		bfeTestSameOptions = new BooleanFieldEditor(
-				PreferenceConstants.P_TEST_SAME_OPTIONS,
-				"Use same options as for framework logging", testOptionsGroup);
-		addField(bfeTestSameOptions);
+		bfeTestPersistentMarker = new BooleanFieldEditor(
+				PreferenceConstants.P_TEST_PERSISTENTMARKER,
+				"Store markers in log file persistently (and not only for the current session)", testOptionsGroup);
+		addField(bfeTestPersistentMarker);
 
 		bfeTestHtmlLogger = new BooleanFieldEditor(
 				PreferenceConstants.P_TEST_HTMLLOGGING,
@@ -285,20 +215,6 @@ public class GlobalTesterPreferencePageLogging extends
 
 			}
 
-			if (event.getSource() == bfeTestSameOptions) {
-				sameOptions = ((Boolean) event.getNewValue()).booleanValue();
-
-				// enable the field editors if same Options is disabled and vice versa
-				bfeTestHtmlLogger.setEnabled(!sameOptions, testOptionsGroup);
-				bfeTestPlainLogger.setEnabled(!sameOptions, testOptionsGroup);
-				bfeTestISO8601Logging
-						.setEnabled(!sameOptions, testOptionsGroup);
-				sfeTestLogLevel.setEnabled(!sameOptions, testOptionsGroup);
-				sfeTestLogLevel.getScaleControl().setEnabled(!sameOptions);
-				lblTestMinLevel.setEnabled(!sameOptions);
-				lblTestMaxLevel.setEnabled(!sameOptions);
-
-			}
 		}
 	}
 

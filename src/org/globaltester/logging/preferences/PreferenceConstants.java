@@ -60,6 +60,10 @@ public class PreferenceConstants {
 	public static final int LOGLEVEL_ERROR = 4;
 	public static final int LOGLEVEL_FATAL = 5;
 
+	// store all marker of log file persistent 
+	public static final String P_TEST_PERSISTENTMARKER= "GT Test - Store all markers of log file persistently";
+	
+	
 	// tranlate loglevels to according Strings
 	public static final String[] LOGLEVELS = new String[] { "TRACE", "DEBUG",
 			"INFO", "WARN", "ERROR", "FATAL" };

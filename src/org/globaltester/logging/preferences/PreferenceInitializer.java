@@ -46,12 +46,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				.getLocation().append(".metadata").toString());
 		store.setDefault(PreferenceConstants.P_TEST_LOGGINGDIR, "");
 
-		// whether TestLogger uses same options as framework logger
-		store.setDefault(PreferenceConstants.P_TEST_SAME_OPTIONS, false);
-
 		// log level of log file
 		store.setDefault(PreferenceConstants.P_GT_LOGLEVEL,
-				PreferenceConstants.LOGLEVEL_INFO);
+				PreferenceConstants.LOGLEVEL_TRACE);
 		store.setDefault(PreferenceConstants.P_TEST_LOGLEVEL,
 				PreferenceConstants.LOGLEVEL_INFO);
 
@@ -70,6 +67,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// switch to use console logging
 		store.setDefault(PreferenceConstants.P_GT_CONSOLELOGGING, false);
 
+		// store all marker of log file persistent
+		store.setDefault(PreferenceConstants.P_TEST_PERSISTENTMARKER, false);
+
+		
 	}
 
 }

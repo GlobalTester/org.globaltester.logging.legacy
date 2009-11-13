@@ -30,9 +30,6 @@ public class PreferenceConstants {
 	// switch to set manual directory settings
 	public static final String P_MANUALDIRSETTINGS = "manualDirSettings";
 
-	// whether TestLogger uses same options as framework logger
-	public static final String P_TEST_SAME_OPTIONS = "GT Test - Use same options";
-
 	// log level of log file
 	public static final String P_GT_LOGLEVEL = "GT Framework - Logging level";
 	public static final String P_TEST_LOGLEVEL = "GT Test - Logging level";

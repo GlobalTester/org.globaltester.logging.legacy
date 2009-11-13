@@ -65,7 +65,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.P_TEST_USEISO8601LOGGING, true);
 		
 		// switch to use console logging
-		store.setDefault(PreferenceConstants.P_GT_CONSOLELOGGING, false);
+		store.setDefault(PreferenceConstants.P_GT_CONSOLELOGGING, true);
 
 		// store all marker of log file persistent
 		store.setDefault(PreferenceConstants.P_TEST_PERSISTENTMARKER, false);

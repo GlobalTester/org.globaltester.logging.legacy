@@ -57,13 +57,13 @@ public class GlobalTesterPreferencePageLogging extends
 	BooleanFieldEditor bfeTestHtmlLogger;
 	BooleanFieldEditor bfeTestPlainLogger;
 	BooleanFieldEditor bfeTestISO8601Logging;
+	BooleanFieldEditor bfeFrameworkConsoleLogger;
 	ScaleFieldEditor sfeTestLogLevel;
 	Label lblTestMinLevel;
 	Label lblTestMaxLevel;
 
 	//variables needed for enabling/disabling of FieldEditors
 	private boolean manualDirSetting; // whether logging directories are manually selected
-	private boolean sameOptions; // whether test logger uses same options as framework logger
 
 	public GlobalTesterPreferencePageLogging() {
 		super(GRID);
@@ -73,7 +73,6 @@ public class GlobalTesterPreferencePageLogging extends
 
 		manualDirSetting = store
 				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
-		sameOptions = store.getBoolean(PreferenceConstants.P_TEST_SAME_OPTIONS);
 	}
 
 	/**
@@ -114,13 +113,11 @@ public class GlobalTesterPreferencePageLogging extends
 				"&Test logging directory:", directoryGroup);
 
 		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
-		dfeTestLoggingDir.setEnabled((manualDirSetting && !sameOptions),
-				directoryGroup);
+		dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 
 		addField(dfeFrameworkLoggingDir);
 		addField(dfeTestLoggingDir);
 
-		
 		//preferences for logging of tests
 		testOptionsGroup = new Group(container, SWT.NONE);
 		testOptionsGroup.setText("Logging of test runs");
@@ -148,6 +145,11 @@ public class GlobalTesterPreferencePageLogging extends
 				PreferenceConstants.P_TEST_USEISO8601LOGGING,
 				"Use ISO 8601 logging in text file", testOptionsGroup);
 		addField(bfeTestISO8601Logging);
+		
+		bfeFrameworkConsoleLogger = new BooleanFieldEditor(
+				PreferenceConstants.P_GT_CONSOLELOGGING,
+				"Activate additional logging to STDOUT", testOptionsGroup);
+		addField(bfeFrameworkConsoleLogger);
 
 		sfeTestLogLevel = new ScaleFieldEditor(
 				PreferenceConstants.P_TEST_LOGLEVEL, "Level of logging",
@@ -183,17 +185,6 @@ public class GlobalTesterPreferencePageLogging extends
 		lblTestMaxLevel.setLayoutData(new GridData(GridData.END, GridData.FILL,
 				true, false));
 
-		if (Activator.getDefault().getPreferenceStore().getBoolean(
-				PreferenceConstants.P_TEST_SAME_OPTIONS)) {
-			bfeTestHtmlLogger.setEnabled(false, testOptionsGroup);
-			bfeTestPlainLogger.setEnabled(false, testOptionsGroup);
-			bfeTestISO8601Logging.setEnabled(false, testOptionsGroup);
-			sfeTestLogLevel.setEnabled(false, testOptionsGroup);
-			sfeTestLogLevel.getScaleControl().setEnabled(false);
-			lblTestMinLevel.setEnabled(false);
-			lblTestMaxLevel.setEnabled(false);
-		}
-
 	}
 
 	public void init(IWorkbench workbench) {
@@ -224,19 +215,8 @@ public class GlobalTesterPreferencePageLogging extends
 				"Switched GT Logging Preference Page back do default values");
 
 		//enable/disable test logging options
-		sameOptions = Activator.getDefault().getPreferenceStore().getBoolean(
-				PreferenceConstants.P_TEST_SAME_OPTIONS);
 		manualDirSetting = Activator.getDefault().getPreferenceStore()
 				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
-
-		// enable the field editors if same Options is disabled and vice versa
-		bfeTestHtmlLogger.setEnabled(!sameOptions, testOptionsGroup);
-		bfeTestPlainLogger.setEnabled(!sameOptions, testOptionsGroup);
-		bfeTestISO8601Logging.setEnabled(!sameOptions, testOptionsGroup);
-		sfeTestLogLevel.setEnabled(!sameOptions, testOptionsGroup);
-		sfeTestLogLevel.getScaleControl().setEnabled(!sameOptions);
-		lblTestMinLevel.setEnabled(!sameOptions);
-		lblTestMaxLevel.setEnabled(!sameOptions);
 
 		//enable or disable the loggingDir editor according to selection
 		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
@@ -246,19 +226,6 @@ public class GlobalTesterPreferencePageLogging extends
 
 	public boolean performOk() {
 		boolean retVal = super.performOk();
-
-		//adapt values for test logging when same options are selected
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		if (store.getBoolean(PreferenceConstants.P_TEST_SAME_OPTIONS)) {
-			store.setValue(PreferenceConstants.P_TEST_PLAINLOGGING, store
-					.getBoolean(PreferenceConstants.P_GT_PLAINLOGGING));
-			store.setValue(PreferenceConstants.P_TEST_HTMLLOGGING, store
-					.getBoolean(PreferenceConstants.P_GT_HTMLLOGGING));
-			store.setValue(PreferenceConstants.P_TEST_LOGLEVEL, store
-					.getBoolean(PreferenceConstants.P_GT_LOGLEVEL));
-			store.setValue(PreferenceConstants.P_TEST_USEISO8601LOGGING, store
-					.getBoolean(PreferenceConstants.P_GT_USEISO8601LOGGING));
-		}
 
 		//make sure that loggers change their options accordingly
 		GTLogger.getInstance().checkOptions();

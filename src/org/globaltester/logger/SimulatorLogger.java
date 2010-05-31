@@ -26,17 +26,17 @@ import org.globaltester.logging.Activator;
 import org.globaltester.logging.preferences.PreferenceConstants;
 
 /**
- * This class implements methods for logging of messages regarding TestExecution
+ * This class implements methods for logging of messages regarding GT Simulator
  * 
  * @version Release 2.2.0
  * @author Alexander May
  * 
  */
 
-public class TestLogger {
+public class SimulatorLogger {
 
-	private static final String APPENDER_PLAIN = "TestLogger_Plain_Appender";
-	private static final String APPENDER_HTML = "TestLogger_HTML_Appender";
+	private static final String APPENDER_PLAIN = "GTSimulatorLogger_Plain_Appender";
+	private static final String APPENDER_HTML = "GTSimulatorLogger_HTML_Appender";
 
 	// Logger
 	private static Logger logger = null;
@@ -60,7 +60,7 @@ public class TestLogger {
 	 * @param obj
 	 */
 	public static void debug(Object obj) {
-		TestLogger.debug(obj.toString());
+		SimulatorLogger.debug(obj.toString());
 	}
 
 	/**
@@ -69,14 +69,14 @@ public class TestLogger {
 	 * @param logString
 	 */
 	public static void debug(String logString) {
-		GTLogger.getInstance().debug(logString);
+		TestLogger.debug(logString);
 		if (isInitialized()) {
 			logger.debug(logString);
 		}
 	}
 
 	/**
-	 * Dispose the TestLogger, TestLogger is unable to log anything until next
+	 * Dispose the SimulatorLogger, SimulatorLogger is unable to log anything until next
 	 * call to init()
 	 */
 	public static void shutdown() {
@@ -92,7 +92,7 @@ public class TestLogger {
 	 * @param obj
 	 */
 	public static void error(Object obj) {
-		TestLogger.error(obj.toString());
+		SimulatorLogger.error(obj.toString());
 	}
 
 	/**
@@ -101,7 +101,7 @@ public class TestLogger {
 	 * @param logString
 	 */
 	public static void error(String logString) {
-		GTLogger.getInstance().error(logString);
+		TestLogger.error(logString);
 		if (isInitialized()) {
 			logger.error(logString);
 		}
@@ -113,7 +113,7 @@ public class TestLogger {
 	 * @param obj
 	 */
 	public static void fatal(Object obj) {
-		TestLogger.fatal(obj.toString());
+		SimulatorLogger.fatal(obj.toString());
 	}
 
 	/**
@@ -122,7 +122,7 @@ public class TestLogger {
 	 * @param logString
 	 */
 	public static void fatal(String logString) {
-		GTLogger.getInstance().fatal(logString);
+		TestLogger.fatal(logString);
 		if (isInitialized()) {
 			logger.fatal(logString);
 		}
@@ -156,7 +156,7 @@ public class TestLogger {
 	 * @param obj
 	 */
 	public static void info(Object obj) {
-		TestLogger.info(obj.toString());
+		SimulatorLogger.info(obj.toString());
 	}
 
 	/**
@@ -165,7 +165,7 @@ public class TestLogger {
 	 * @param logString
 	 */
 	public static void info(String logString) {
-		GTLogger.getInstance().info(logString);
+		TestLogger.info(logString);
 		if (isInitialized()) {
 			logger.info(logString);
 		}
@@ -176,17 +176,17 @@ public class TestLogger {
 	 */
 	public static void init() {
 		if (logger != null) {
-			GTLogger.getInstance().error(
-					"Only one TestLogger is allowed to be active at a time!");
+			TestLogger.error(
+					"Only one SimulatorLogger is allowed to be active at a time!");
 			throw new RuntimeException(
-					"Only one TestLogger is allowed to be active at a time");
+					"Only one SimulatorLogger is allowed to be active at a time");
 		}
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
 		//get the Logger from log4j
 		BasicConfigurator.configure();
-		logger = Logger.getLogger("TestLogger");
+		logger = Logger.getLogger("GTSimulatorLogger");
 
 		//clean the logger (just to be sure)
 		logger.removeAllAppenders();
@@ -194,7 +194,7 @@ public class TestLogger {
 
 		//set the loglevel
 		String level = PreferenceConstants.LOGLEVELS[store
-				.getInt(PreferenceConstants.P_TEST_LOGLEVEL)];
+				.getInt(PreferenceConstants.P_GT_SIM_LOGLEVEL)];
 		logger.setLevel(Level.toLevel(level));
 
 		//configure filenames according to preferences
@@ -202,18 +202,19 @@ public class TestLogger {
 
 		// settings for logfiles		
 		Layout fileLayout;
-		if (store.getBoolean(PreferenceConstants.P_TEST_USEISO8601LOGGING)) {
+		if (store.getBoolean(PreferenceConstants.P_GT_SIM_USEISO8601LOGGING)) {
 			fileLayout = new PatternLayout("%d %-5p - %m%n");
 		} else {
 			fileLayout = new PatternLayout("%m%n");
 		}
 
 		// settings for 'plain' logging
-		if (store.getBoolean(PreferenceConstants.P_TEST_PLAINLOGGING)) {
+		if (store.getBoolean(PreferenceConstants.P_GT_SIM_PLAINLOGGING)) {
 			try {
 				FileAppender fileAppenderPlain = new FileAppender(fileLayout,
 						logFileName);
 				fileAppenderPlain.setName(APPENDER_PLAIN);
+				fileAppenderPlain.setImmediateFlush(true);
 				logger.addAppender(fileAppenderPlain);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -223,7 +224,7 @@ public class TestLogger {
 		}
 
 		//settings for html file
-		if (store.getBoolean(PreferenceConstants.P_TEST_HTMLLOGGING)) {
+		if (store.getBoolean(PreferenceConstants.P_GT_SIM_HTMLLOGGING)) {
 			HTMLLayout htmlLayout = new HTMLLayout();
 			htmlLayout.setTitle(htmlFileName);
 			try {
@@ -251,7 +252,7 @@ public class TestLogger {
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		String level = PreferenceConstants.LOGLEVELS[store
-				.getInt(PreferenceConstants.P_GT_LOGLEVEL)];
+				.getInt(PreferenceConstants.P_GT_SIM_LOGLEVEL)];
 		logger.setLevel(Level.toLevel(level));
 	}
 
@@ -288,7 +289,7 @@ public class TestLogger {
 	 * @param obj
 	 */
 	public static void trace(Object obj) {
-		TestLogger.trace(obj.toString());
+		SimulatorLogger.trace(obj.toString());
 	}
 
 	/**
@@ -297,7 +298,7 @@ public class TestLogger {
 	 * @param logString
 	 */
 	public static void trace(String logString) {
-		GTLogger.getInstance().trace(logString);
+		TestLogger.trace(logString);
 		if (isInitialized()) {
 			logger.trace(logString);
 		}
@@ -309,7 +310,7 @@ public class TestLogger {
 	 * @param obj
 	 */
 	public static void warn(Object obj) {
-		TestLogger.warn(obj.toString());
+		SimulatorLogger.warn(obj.toString());
 	}
 
 	/**
@@ -318,7 +319,7 @@ public class TestLogger {
 	 * @param logString
 	 */
 	public static void warn(String logString) {
-		GTLogger.getInstance().warn(logString);
+		TestLogger.warn(logString);
 		if (isInitialized()) {
 			logger.warn(logString);
 		}
@@ -327,7 +328,7 @@ public class TestLogger {
 	/**
 	 * private default Constructor makes sure this class is not instantiated
 	 */
-	private TestLogger() {
+	private SimulatorLogger() {
 
 	}
 
@@ -356,13 +357,13 @@ public class TestLogger {
 		boolean manualDirSettings = store
 				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
 		if (manualDirSettings) {
-			logDir = store.getString(PreferenceConstants.P_TEST_LOGGINGDIR);
+			logDir = store.getString(PreferenceConstants.P_GT_SIM_LOGGINGDIR);
 		}
 
 		//build the filenames
-		htmlFileName = logDir + "/gt_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
+		htmlFileName = logDir + "/gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
 				+ ".html";
-		logFileName = logDir + "/gt_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
+		logFileName = logDir + "/gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
 				+ ".log";
 	}
 

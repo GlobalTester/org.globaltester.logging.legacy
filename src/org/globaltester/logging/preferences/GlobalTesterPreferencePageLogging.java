@@ -49,7 +49,7 @@ public class GlobalTesterPreferencePageLogging extends
 	BooleanFieldEditor bfeManualSettings;
 	DirectoryFieldEditor dfeFrameworkLoggingDir;
 	DirectoryFieldEditor dfeTestLoggingDir;
-
+	DirectoryFieldEditor dfeSimLoggingDir;
 
 	//editors for test logging options
 	Group testOptionsGroup;
@@ -61,6 +61,16 @@ public class GlobalTesterPreferencePageLogging extends
 	ScaleFieldEditor sfeTestLogLevel;
 	Label lblTestMinLevel;
 	Label lblTestMaxLevel;
+	
+	//editors for test logging options
+	Group simOptionsGroup;
+	BooleanFieldEditor bfeSimtPersistentMarker;
+	BooleanFieldEditor bfeSimHtmlLogger;
+	BooleanFieldEditor bfeSimPlainLogger;
+	BooleanFieldEditor bfeSimISO8601Logging;
+	ScaleFieldEditor sfeSimLogLevel;
+	Label lblSimMinLevel;
+	Label lblSimMaxLevel;
 
 	//variables needed for enabling/disabling of FieldEditors
 	private boolean manualDirSetting; // whether logging directories are manually selected
@@ -111,12 +121,17 @@ public class GlobalTesterPreferencePageLogging extends
 		dfeTestLoggingDir = new DirectoryFieldEditor(
 				PreferenceConstants.P_TEST_LOGGINGDIR,
 				"&Test logging directory:", directoryGroup);
+		dfeSimLoggingDir = new DirectoryFieldEditor(
+				PreferenceConstants.P_GT_SIM_LOGGINGDIR,
+				"&Simulator logging directory:", directoryGroup);
 
 		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 		dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
+		dfeSimLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 
 		addField(dfeFrameworkLoggingDir);
 		addField(dfeTestLoggingDir);
+		addField(dfeSimLoggingDir);
 
 		//preferences for logging of tests
 		testOptionsGroup = new Group(container, SWT.NONE);
@@ -157,24 +172,6 @@ public class GlobalTesterPreferencePageLogging extends
 				PreferenceConstants.LOGLEVEL_FATAL, 1, 1);
 		addField(sfeTestLogLevel);
 		
-		//create caption for the loglevel scale field
-		Composite labelComposite2 = new Composite(testOptionsGroup,
-				SWT.NONE);
-		labelComposite2.setLayout(new FillLayout(SWT.HORIZONTAL));
-		GridData labelData2 = new GridData(GridData.FILL, GridData.FILL, true,
-				false);
-		labelData2.horizontalSpan = 2;
-		labelData2.grabExcessHorizontalSpace = true;
-		labelComposite2.setLayoutData(labelData2);
-		//add each label followed by an empty spacer label
-		for (int i = 0; i < PreferenceConstants.LOGLEVELS.length; i++) {
-			Label lbl = new Label(labelComposite2, SWT.CENTER);
-			lbl.setText(PreferenceConstants.LOGLEVELS[i]);
-			if (i + 1 < PreferenceConstants.LOGLEVELS.length) {
-				new Label(labelComposite2, SWT.CENTER);
-			}
-		}
-
 		lblTestMinLevel = new Label(testOptionsGroup, SWT.LEFT);
 		lblTestMinLevel.setText("everything is logged");
 		lblTestMinLevel.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL,
@@ -183,6 +180,63 @@ public class GlobalTesterPreferencePageLogging extends
 		lblTestMaxLevel = new Label(testOptionsGroup, SWT.RIGHT);
 		lblTestMaxLevel.setText("only fatal problems are logged");
 		lblTestMaxLevel.setLayoutData(new GridData(GridData.END, GridData.FILL,
+				true, false));
+		
+		//preferences for logging of GT Simulator
+		simOptionsGroup = new Group(container, SWT.NONE);
+		simOptionsGroup.setText("Logging of GT Simulator runs");
+		GridData gd4 = new GridData(GridData.FILL, GridData.FILL, true, false);
+		gd4.horizontalSpan = 2;
+		simOptionsGroup.setLayoutData(gd4);
+		simOptionsGroup.setLayout(new GridLayout(2, false));
+
+		bfeSimHtmlLogger = new BooleanFieldEditor(
+				PreferenceConstants.P_GT_SIM_HTMLLOGGING,
+				"Activate additional HTML log file", simOptionsGroup);
+		addField(bfeSimHtmlLogger);
+
+		bfeSimPlainLogger = new BooleanFieldEditor(
+				PreferenceConstants.P_GT_SIM_PLAINLOGGING,
+				"Use standard logging (plain text file)", simOptionsGroup);
+		addField(bfeSimPlainLogger);
+
+		bfeSimISO8601Logging = new BooleanFieldEditor(
+				PreferenceConstants.P_GT_SIM_USEISO8601LOGGING,
+				"Use ISO 8601 logging in text file", simOptionsGroup);
+		addField(bfeSimISO8601Logging);
+		
+		sfeSimLogLevel = new ScaleFieldEditor(
+				PreferenceConstants.P_GT_SIM_LOGLEVEL, "Level of logging",
+				simOptionsGroup, PreferenceConstants.LOGLEVEL_TRACE,
+				PreferenceConstants.LOGLEVEL_FATAL, 1, 1);
+		addField(sfeSimLogLevel);
+		
+		//create caption for the loglevel scale field
+		Composite labelComposite3 = new Composite(simOptionsGroup,
+				SWT.NONE);
+		labelComposite3.setLayout(new FillLayout(SWT.HORIZONTAL));
+		GridData labelData3 = new GridData(GridData.FILL, GridData.FILL, true,
+				false);
+		labelData3.horizontalSpan = 3;
+		labelData3.grabExcessHorizontalSpace = true;
+		labelComposite3.setLayoutData(labelData3);
+		//add each label followed by an empty spacer label
+		for (int i = 0; i < PreferenceConstants.LOGLEVELS.length; i++) {
+			Label lbl = new Label(labelComposite3, SWT.CENTER);
+			lbl.setText(PreferenceConstants.LOGLEVELS[i]);
+			if (i + 1 < PreferenceConstants.LOGLEVELS.length) {
+				new Label(labelComposite3, SWT.CENTER);
+			}
+		}
+
+		lblSimMinLevel = new Label(simOptionsGroup, SWT.LEFT);
+		lblSimMinLevel.setText("everything is logged");
+		lblSimMinLevel.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL,
+				true, false));
+
+		lblSimMaxLevel = new Label(simOptionsGroup, SWT.RIGHT);
+		lblSimMaxLevel.setText("only fatal problems are logged");
+		lblSimMaxLevel.setLayoutData(new GridData(GridData.END, GridData.FILL,
 				true, false));
 
 	}
@@ -203,6 +257,7 @@ public class GlobalTesterPreferencePageLogging extends
 						directoryGroup);
 
 				dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
+				dfeSimLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 
 			}
 
@@ -221,6 +276,7 @@ public class GlobalTesterPreferencePageLogging extends
 		//enable or disable the loggingDir editor according to selection
 		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 		dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
+		dfeSimLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 
 	}
 

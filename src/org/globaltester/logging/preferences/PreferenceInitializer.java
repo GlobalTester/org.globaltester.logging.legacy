@@ -45,24 +45,30 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.P_GT_LOGGINGDIR, Platform
 				.getLocation().append(".metadata").toString());
 		store.setDefault(PreferenceConstants.P_TEST_LOGGINGDIR, "");
+		store.setDefault(PreferenceConstants.P_GT_SIM_LOGGINGDIR, "");
 
 		// log level of log file
 		store.setDefault(PreferenceConstants.P_GT_LOGLEVEL,
 				PreferenceConstants.LOGLEVEL_TRACE);
 		store.setDefault(PreferenceConstants.P_TEST_LOGLEVEL,
 				PreferenceConstants.LOGLEVEL_INFO);
+		store.setDefault(PreferenceConstants.P_GT_SIM_LOGLEVEL,
+				PreferenceConstants.LOGLEVEL_INFO);
 
 		// switch to use html log file
 		store.setDefault(PreferenceConstants.P_GT_HTMLLOGGING, false);
 		store.setDefault(PreferenceConstants.P_TEST_HTMLLOGGING, false);
+		store.setDefault(PreferenceConstants.P_GT_SIM_HTMLLOGGING, false);
 
 		// switch to use plain log file
 		store.setDefault(PreferenceConstants.P_GT_PLAINLOGGING, true);
 		store.setDefault(PreferenceConstants.P_TEST_PLAINLOGGING, true);
+		store.setDefault(PreferenceConstants.P_GT_SIM_PLAINLOGGING, true);
 
 		// log in ISO8601 format
 		store.setDefault(PreferenceConstants.P_GT_USEISO8601LOGGING, true);
 		store.setDefault(PreferenceConstants.P_TEST_USEISO8601LOGGING, true);
+		store.setDefault(PreferenceConstants.P_GT_SIM_USEISO8601LOGGING, true);
 		
 		// switch to use console logging
 		store.setDefault(PreferenceConstants.P_GT_CONSOLELOGGING, true);

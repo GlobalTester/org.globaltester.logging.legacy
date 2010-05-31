@@ -25,6 +25,7 @@ public class PreferenceConstants {
 
 	// directory name of logging files
 	public static final String P_GT_LOGGINGDIR = "GT Framework - Logging directory";
+	public static final String P_GT_SIM_LOGGINGDIR = "GT Simulator - Logging directory";
 	public static final String P_TEST_LOGGINGDIR = "GT Test - Logging directory";
 
 	// switch to set manual directory settings
@@ -32,18 +33,22 @@ public class PreferenceConstants {
 
 	// log level of log file
 	public static final String P_GT_LOGLEVEL = "GT Framework - Logging level";
+	public static final String P_GT_SIM_LOGLEVEL = "GT Simulator - Logging level";
 	public static final String P_TEST_LOGLEVEL = "GT Test - Logging level";
 
 	// switch to use html log file
 	public static final String P_GT_HTMLLOGGING = "GT Framework - Use HTML Logging";
+	public static final String P_GT_SIM_HTMLLOGGING = "GT Simulator - Use HTML Logging";
 	public static final String P_TEST_HTMLLOGGING = "GT Test - Use HTML Logging";
 
 	// switch to use plain log file
 	public static final String P_GT_PLAINLOGGING = "GT Framework - Use Plain Logging";
+	public static final String P_GT_SIM_PLAINLOGGING = "GT Simulator - Use Plain Logging";
 	public static final String P_TEST_PLAINLOGGING = "GT Test - Use Plain Logging";
 
 	// log in ISO8601 format
 	public static final String P_GT_USEISO8601LOGGING = "GT Framework - Use ISO 8601 Logging";
+	public static final String P_GT_SIM_USEISO8601LOGGING = "GT Simulator - Use ISO 8601 Logging";
 	public static final String P_TEST_USEISO8601LOGGING = "GT Test - Use ISO 8601 Logging";
 	
 	//log framework log to console

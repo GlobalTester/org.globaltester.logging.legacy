@@ -214,7 +214,6 @@ public class SimulatorLogger {
 				FileAppender fileAppenderPlain = new FileAppender(fileLayout,
 						logFileName);
 				fileAppenderPlain.setName(APPENDER_PLAIN);
-				fileAppenderPlain.setImmediateFlush(true);
 				logger.addAppender(fileAppenderPlain);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -337,29 +336,13 @@ public class SimulatorLogger {
 	}
 
 	/**
-	 * Initialize a the TestLogger for a new Test
-	 * 
-	 * @param defaultLoggingDir
-	 *            will be used as logging directory if user has not selected
-	 *            manual directory
-	 */
-	public static void init(String defaultLoggingDir) {
-		logDir = defaultLoggingDir;
-		init();
-	}
-
-	/**
 	 * Create file names for log files. Add iso formated date to file name.
 	 */
 	private static void setFileNames() {
-		//overwrite the logDir with value from PreferenceStore if manual settings are selected
+		//get the logDir from PreferenceStore
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		boolean manualDirSettings = store
-				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
-		if (manualDirSettings) {
-			logDir = store.getString(PreferenceConstants.P_GT_SIM_LOGGINGDIR);
-		}
-
+		logDir = store.getString(PreferenceConstants.P_GT_SIM_LOGGINGDIR);
+		
 		//build the filenames
 		htmlFileName = logDir + "/gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
 				+ ".html";

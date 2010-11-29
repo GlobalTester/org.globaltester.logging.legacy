@@ -343,6 +343,12 @@ public class SimulatorLogger {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		logDir = store.getString(PreferenceConstants.P_GT_SIM_LOGGINGDIR);
 		
+		// if no directory is specified by user, use user home (instead of root because of rights
+		// management in Vista and Win7)
+		if (logDir.equals("")) {
+			logDir = System.getProperty("user.home");
+		}
+		
 		//build the filenames
 		htmlFileName = logDir + "/gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
 				+ ".html";

@@ -357,12 +357,12 @@ public class TestLogger {
 				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
 		if (manualDirSettings) {
 			logDir = store.getString(PreferenceConstants.P_TEST_LOGGINGDIR);
-		}
-
+		}		
+		
 		//build the filenames
-		htmlFileName = logDir + "/gt_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
+		htmlFileName = logDir + "/gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
 				+ ".html";
-		logFileName = logDir + "/gt_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
+		logFileName = logDir + "/gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
 				+ ".log";
 	}
 

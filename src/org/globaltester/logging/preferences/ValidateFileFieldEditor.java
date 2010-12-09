@@ -85,7 +85,7 @@ public class ValidateFileFieldEditor extends FileFieldEditor {
         init(name, labelText);
         this.enforceAbsolute = enforceAbsolute;
         setErrorMessage(JFaceResources
-                .getString("FileFieldEditor.errorMessage"));//$NON-NLS-1$
+                .getString("ValidateFileFieldEditor.errorMessage"));//$NON-NLS-1$
         setChangeButtonText(JFaceResources.getString("openBrowse"));//$NON-NLS-1$
         setValidateStrategy(validationStrategy);
         createControl(parent);
@@ -131,7 +131,7 @@ public class ValidateFileFieldEditor extends FileFieldEditor {
             if (file.isFile()) {
                 if (enforceAbsolute && !file.isAbsolute()) {
 					msg = JFaceResources
-                            .getString("FileFieldEditor.errorMessage2");//$NON-NLS-1$
+                            .getString("ValidateFileFieldEditor.errorMessage2");//$NON-NLS-1$
 				}
             } else {
                 msg = getErrorMessage();

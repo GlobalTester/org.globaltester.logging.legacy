@@ -118,15 +118,15 @@ public class GlobalTesterPreferencePageLogging extends
 		dfeFrameworkLoggingDir = new DirectoryFieldEditor(
 				PreferenceConstants.P_GT_LOGGINGDIR,
 				"&Framework logging directory:", directoryGroup);
+		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
+		dfeFrameworkLoggingDir.setValidateStrategy(DirectoryFieldEditor.VALIDATE_ON_KEY_STROKE);
+		addField(dfeFrameworkLoggingDir);
+		
 		dfeTestLoggingDir = new DirectoryFieldEditor(
 				PreferenceConstants.P_TEST_LOGGINGDIR,
 				"&Test logging directory:", directoryGroup);
-		
-
-		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 		dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
-		
-		addField(dfeFrameworkLoggingDir);
+		dfeTestLoggingDir.setValidateStrategy(DirectoryFieldEditor.VALIDATE_ON_KEY_STROKE);
 		addField(dfeTestLoggingDir);
 		
 		//preferences for logging of tests
@@ -217,6 +217,7 @@ public class GlobalTesterPreferencePageLogging extends
 			dfeSimLoggingDir = new DirectoryFieldEditor(
 					PreferenceConstants.P_GT_SIM_LOGGINGDIR,
 					"&Simulator logging directory:", comp1);
+			dfeSimLoggingDir.setValidateStrategy(DirectoryFieldEditor.VALIDATE_ON_KEY_STROKE);
 			addField(dfeSimLoggingDir);
 			
 			bfeSimHtmlLogger = new BooleanFieldEditor(

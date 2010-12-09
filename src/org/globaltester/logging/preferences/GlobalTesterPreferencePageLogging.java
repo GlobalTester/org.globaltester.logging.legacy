@@ -17,7 +17,6 @@ package org.globaltester.logging.preferences;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -48,8 +47,8 @@ public class GlobalTesterPreferencePageLogging extends
 	//editors for directory options
 	Group directoryGroup;
 	BooleanFieldEditor bfeManualSettings;
-	DirectoryFieldEditor dfeFrameworkLoggingDir;
-	DirectoryFieldEditor dfeTestLoggingDir;
+	ValidateDirectoryFieldEditor dfeFrameworkLoggingDir;
+	ValidateDirectoryFieldEditor dfeTestLoggingDir;
 
 	//editors for test logging options
 	Group testOptionsGroup;
@@ -64,7 +63,7 @@ public class GlobalTesterPreferencePageLogging extends
 	
 	//editors for simulator logging options
 	Group simOptionsGroup;
-	DirectoryFieldEditor dfeSimLoggingDir;
+	ValidateDirectoryFieldEditor dfeSimLoggingDir;
 	BooleanFieldEditor bfeSimHtmlLogger;
 	BooleanFieldEditor bfeSimPlainLogger;
 	BooleanFieldEditor bfeSimISO8601Logging;
@@ -115,18 +114,16 @@ public class GlobalTesterPreferencePageLogging extends
 				"Manual setting of directories and files", directoryGroup);
 		addField(bfeManualSettings);
 
-		dfeFrameworkLoggingDir = new DirectoryFieldEditor(
+		dfeFrameworkLoggingDir = new ValidateDirectoryFieldEditor(
 				PreferenceConstants.P_GT_LOGGINGDIR,
 				"&Framework logging directory:", directoryGroup);
 		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
-		dfeFrameworkLoggingDir.setValidateStrategy(DirectoryFieldEditor.VALIDATE_ON_KEY_STROKE);
 		addField(dfeFrameworkLoggingDir);
 		
-		dfeTestLoggingDir = new DirectoryFieldEditor(
+		dfeTestLoggingDir = new ValidateDirectoryFieldEditor(
 				PreferenceConstants.P_TEST_LOGGINGDIR,
 				"&Test logging directory:", directoryGroup);
 		dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
-		dfeTestLoggingDir.setValidateStrategy(DirectoryFieldEditor.VALIDATE_ON_KEY_STROKE);
 		addField(dfeTestLoggingDir);
 		
 		//preferences for logging of tests
@@ -214,10 +211,9 @@ public class GlobalTesterPreferencePageLogging extends
 			gd_comp1.grabExcessHorizontalSpace = true;
 			comp1.setLayoutData(gd_comp1);
 			
-			dfeSimLoggingDir = new DirectoryFieldEditor(
+			dfeSimLoggingDir = new ValidateDirectoryFieldEditor(
 					PreferenceConstants.P_GT_SIM_LOGGINGDIR,
 					"&Simulator logging directory:", comp1);
-			dfeSimLoggingDir.setValidateStrategy(DirectoryFieldEditor.VALIDATE_ON_KEY_STROKE);
 			addField(dfeSimLoggingDir);
 			
 			bfeSimHtmlLogger = new BooleanFieldEditor(

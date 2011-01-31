@@ -175,68 +175,75 @@ public class SimulatorLogger {
 	 * Initialize a the TestLogger for a new Test
 	 */
 	public static void init() {
-		if (logger != null) {
-			TestLogger.error(
-					"Only one SimulatorLogger is allowed to be active at a time!");
-			throw new RuntimeException(
-					"Only one SimulatorLogger is allowed to be active at a time");
-		}
-
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-
-		//get the Logger from log4j
-		BasicConfigurator.configure();
-		logger = Logger.getLogger("GTSimulatorLogger");
-
-		//clean the logger (just to be sure)
-		logger.removeAllAppenders();
-		Logger.getRootLogger().removeAllAppenders();
-
-		//set the loglevel
-		String level = PreferenceConstants.LOGLEVELS[store
-				.getInt(PreferenceConstants.P_GT_SIM_LOGLEVEL)];
-		logger.setLevel(Level.toLevel(level));
-
-		//configure filenames according to preferences
-		setFileNames();
-
-		// settings for logfiles		
-		Layout fileLayout;
-		if (store.getBoolean(PreferenceConstants.P_GT_SIM_USEISO8601LOGGING)) {
-			fileLayout = new PatternLayout("%d %-5p - %m%n");
-		} else {
-			fileLayout = new PatternLayout("%m%n");
-		}
-
-		// settings for 'plain' logging
-		if (store.getBoolean(PreferenceConstants.P_GT_SIM_PLAINLOGGING)) {
-			try {
-				FileAppender fileAppenderPlain = new FileAppender(fileLayout,
-						logFileName);
-				fileAppenderPlain.setName(APPENDER_PLAIN);
-				logger.addAppender(fileAppenderPlain);
-			} catch (IOException e) {
-				e.printStackTrace();
+		try {
+			if (logger != null) {
+				TestLogger.error(
+						"Only one SimulatorLogger is allowed to be active at a time!");
+				throw new RuntimeException(
+						"Only one SimulatorLogger is allowed to be active at a time");
 			}
-		} else {
-			logFileName = "";
-		}
-
-		//settings for html file
-		if (store.getBoolean(PreferenceConstants.P_GT_SIM_HTMLLOGGING)) {
-			HTMLLayout htmlLayout = new HTMLLayout();
-			htmlLayout.setTitle(htmlFileName);
-			try {
-				FileAppender fileAppenderHtml = new FileAppender(htmlLayout,
-						htmlFileName);
-				fileAppenderHtml.setName(APPENDER_HTML);
-				logger.addAppender(fileAppenderHtml);
-			} catch (Exception e) {
-				e.printStackTrace();
+	
+			IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+	
+			//get the Logger from log4j
+			BasicConfigurator.configure();
+			logger = Logger.getLogger("GTSimulatorLogger");
+	
+			//clean the logger (just to be sure)
+			logger.removeAllAppenders();
+			Logger.getRootLogger().removeAllAppenders();
+	
+			//set the loglevel
+			String level = PreferenceConstants.LOGLEVELS[store
+					.getInt(PreferenceConstants.P_GT_SIM_LOGLEVEL)];
+			logger.setLevel(Level.toLevel(level));
+			
+			if (store.getBoolean(PreferenceConstants.P_USE_SIM_LOG)) {
+				
+				//configure filenames according to preferences
+				setFileNames();
+		
+				// settings for logfiles		
+				Layout fileLayout;
+				if (store.getBoolean(PreferenceConstants.P_GT_SIM_USEISO8601LOGGING)) {
+					fileLayout = new PatternLayout("%d %-5p - %m%n");
+				} else {
+					fileLayout = new PatternLayout("%m%n");
+				}
+		
+				// settings for 'plain' logging
+				if (store.getBoolean(PreferenceConstants.P_GT_SIM_PLAINLOGGING)) {
+					try {
+						FileAppender fileAppenderPlain = new FileAppender(fileLayout,
+								logFileName);
+						fileAppenderPlain.setName(APPENDER_PLAIN);
+						logger.addAppender(fileAppenderPlain);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					logFileName = "";
+				}
+		
+				//settings for html file
+				if (store.getBoolean(PreferenceConstants.P_GT_SIM_HTMLLOGGING)) {
+					HTMLLayout htmlLayout = new HTMLLayout();
+					htmlLayout.setTitle(htmlFileName);
+					try {
+						FileAppender fileAppenderHtml = new FileAppender(htmlLayout,
+								htmlFileName);
+						fileAppenderHtml.setName(APPENDER_HTML);
+						logger.addAppender(fileAppenderHtml);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+		
+				} else {
+					htmlFileName = "";
+				}
 			}
-
-		} else {
-			htmlFileName = "";
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 
 	}

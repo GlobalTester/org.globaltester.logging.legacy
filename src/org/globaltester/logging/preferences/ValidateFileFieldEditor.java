@@ -84,8 +84,7 @@ public class ValidateFileFieldEditor extends FileFieldEditor {
             boolean enforceAbsolute, int validationStrategy, Composite parent) {
         init(name, labelText);
         this.enforceAbsolute = enforceAbsolute;
-        setErrorMessage(JFaceResources
-                .getString("ValidateFileFieldEditor.errorMessage"));//$NON-NLS-1$
+        setErrorMessage("Use a valid file!");//$NON-NLS-1$
         setChangeButtonText(JFaceResources.getString("openBrowse"));//$NON-NLS-1$
         setValidateStrategy(validationStrategy);
         createControl(parent);
@@ -115,16 +114,19 @@ public class ValidateFileFieldEditor extends FileFieldEditor {
     protected boolean checkState() {
 
         String msg = null;
+        Boolean all_okay = true;
 
         String path = getTextControl().getText();
         if (path != null) {
 			path = path.trim();
 		} else {
+			all_okay = false;
 			path = "";//$NON-NLS-1$
 		}
         if (path.length() == 0) {
             if (!isEmptyStringAllowed()) {
 				msg = getErrorMessage();
+				all_okay = false;
 			}
         } else {
             File file = new File(path);
@@ -135,17 +137,17 @@ public class ValidateFileFieldEditor extends FileFieldEditor {
 				}
             } else {
                 msg = getErrorMessage();
+                all_okay = false;
             }
         }
 
         if (msg != null) { // error
             showErrorMessage(msg);
-            return false;
+            all_okay = false;
         }
 
-        // OK!
-        clearErrorMessage();
-        return true;
+        if (all_okay) clearErrorMessage();
+        return all_okay;
     }
 
     /**

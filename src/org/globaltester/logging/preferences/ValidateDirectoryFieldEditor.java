@@ -39,7 +39,7 @@ public class ValidateDirectoryFieldEditor extends DirectoryFieldEditor {
     public ValidateDirectoryFieldEditor(String name, String labelText, Composite parent) {
         init(name, labelText);
         setErrorMessage(JFaceResources
-                .getString("ValidateDirectoryFieldEditor.errorMessage"));//$NON-NLS-1$
+                .getString("Use a valid directory!"));//$NON-NLS-1$
         setChangeButtonText(JFaceResources.getString("openBrowse"));//$NON-NLS-1$
         setValidateStrategy(VALIDATE_ON_KEY_STROKE);
         createControl(parent);
@@ -68,12 +68,14 @@ public class ValidateDirectoryFieldEditor extends DirectoryFieldEditor {
      */
     protected boolean doCheckState() {
         String fileName = getTextControl().getText();
+        Boolean fileIsDirectory;
         fileName = fileName.trim();
         if (fileName.length() == 0 && isEmptyStringAllowed()) {
 			return true;
 		}
         File file = new File(fileName);
-        return file.isDirectory();
+        fileIsDirectory = file.isDirectory();
+        return fileIsDirectory;
     }
 
     /**

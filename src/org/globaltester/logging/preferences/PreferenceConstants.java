@@ -30,6 +30,7 @@ public class PreferenceConstants {
 
 	// switch to set manual directory settings
 	public static final String P_MANUALDIRSETTINGS = "manualDirSettings";
+	public static final String P_USE_SIM_LOG = "Use GT Simulator Logging";
 
 	// log level of log file
 	public static final String P_GT_LOGLEVEL = "GT Framework - Logging level";

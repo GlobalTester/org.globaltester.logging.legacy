@@ -63,6 +63,7 @@ public class GlobalTesterPreferencePageLogging extends
 	
 	//editors for simulator logging options
 	Group simOptionsGroup;
+	BooleanFieldEditor bfeUseSimLogs;
 	ValidateDirectoryFieldEditor dfeSimLoggingDir;
 	BooleanFieldEditor bfeSimHtmlLogger;
 	BooleanFieldEditor bfeSimPlainLogger;
@@ -73,6 +74,8 @@ public class GlobalTesterPreferencePageLogging extends
 
 	//variables needed for enabling/disabling of FieldEditors
 	private boolean manualDirSetting; // whether logging directories are manually selected
+	private boolean useSimLogs; // whether logging directories are manually selected
+	private Composite comp1;
 
 	public GlobalTesterPreferencePageLogging() {
 		super(GRID);
@@ -82,6 +85,9 @@ public class GlobalTesterPreferencePageLogging extends
 
 		manualDirSetting = store
 				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
+		
+		useSimLogs = store
+				.getBoolean(PreferenceConstants.P_USE_SIM_LOG);
 	}
 
 	/**
@@ -117,12 +123,14 @@ public class GlobalTesterPreferencePageLogging extends
 		dfeFrameworkLoggingDir = new ValidateDirectoryFieldEditor(
 				PreferenceConstants.P_GT_LOGGINGDIR,
 				"&Framework logging directory:", directoryGroup);
+		dfeFrameworkLoggingDir.setEmptyStringAllowed(false);
 		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 		addField(dfeFrameworkLoggingDir);
 		
 		dfeTestLoggingDir = new ValidateDirectoryFieldEditor(
 				PreferenceConstants.P_TEST_LOGGINGDIR,
 				"&Test logging directory:", directoryGroup);
+		dfeTestLoggingDir.setEmptyStringAllowed(false);
 		dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 		addField(dfeTestLoggingDir);
 		
@@ -202,7 +210,12 @@ public class GlobalTesterPreferencePageLogging extends
 			simOptionsGroup.setLayoutData(gd4);
 			simOptionsGroup.setLayout(new GridLayout(2, false));
 			
-			Composite comp1 = new Composite(simOptionsGroup,
+			bfeUseSimLogs = new BooleanFieldEditor(
+					PreferenceConstants.P_USE_SIM_LOG,
+					"Generate simulator logging files with following options", simOptionsGroup);
+			addField(bfeUseSimLogs);
+			
+			comp1 = new Composite(simOptionsGroup,
 					SWT.NONE);
 			comp1.setLayout(new FillLayout(SWT.HORIZONTAL));
 			GridData gd_comp1 = new GridData(GridData.FILL, GridData.FILL, true,
@@ -214,6 +227,8 @@ public class GlobalTesterPreferencePageLogging extends
 			dfeSimLoggingDir = new ValidateDirectoryFieldEditor(
 					PreferenceConstants.P_GT_SIM_LOGGINGDIR,
 					"&Simulator logging directory:", comp1);
+			dfeSimLoggingDir.setEmptyStringAllowed(false);
+			dfeSimLoggingDir.setEnabled(useSimLogs, comp1);
 			addField(dfeSimLoggingDir);
 			
 			bfeSimHtmlLogger = new BooleanFieldEditor(
@@ -281,14 +296,49 @@ public class GlobalTesterPreferencePageLogging extends
 			if (event.getSource() == bfeManualSettings) {
 				manualDirSetting = ((Boolean) event.getNewValue())
 						.booleanValue();
+				if (manualDirSetting == true) {
+					dfeFrameworkLoggingDir.setEnabled(true,directoryGroup);
+					dfeTestLoggingDir.setEnabled(true, directoryGroup);
+					if (dfeFrameworkLoggingDir.isValid() && dfeFrameworkLoggingDir.getStringValue() !="" &&
+							dfeTestLoggingDir.isValid() && dfeTestLoggingDir.getStringValue() !=""	) {
+						setErrorMessage(null);	
+						setValid(true);
+					} else {	
+						setErrorMessage("Use a valid directory!");
+						setValid(false);
+					}
+				} else {
+					dfeFrameworkLoggingDir.setEnabled(false,directoryGroup);
+					dfeTestLoggingDir.setEnabled(false, directoryGroup);
+					setErrorMessage(null);
+					setValid(true);
+				}
 
-				dfeFrameworkLoggingDir.setEnabled(manualDirSetting,
-						directoryGroup);
 
-				dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 
 			}
-
+			
+			if (event.getSource() == bfeUseSimLogs) {
+				useSimLogs = ((Boolean) event.getNewValue())
+						.booleanValue();
+				if (useSimLogs == true) {
+					dfeSimLoggingDir.setEnabled(true,comp1);
+					if (dfeSimLoggingDir.isValid() && dfeSimLoggingDir.getStringValue() !="") {
+						setErrorMessage(null);	
+						setValid(true);
+					} else {	
+						setErrorMessage("Use a valid directory!");
+						setValid(false);
+					}
+						
+				} else {
+					dfeSimLoggingDir.setEnabled(false,comp1);
+					setErrorMessage(null);
+					setValid(true);
+				}
+					
+			}
+			
 		}
 	}
 
@@ -304,6 +354,10 @@ public class GlobalTesterPreferencePageLogging extends
 		//enable or disable the loggingDir editor according to selection
 		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
 		dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
+		
+		//enable or disable the simulator logging according to selection
+		dfeSimLoggingDir.setEnabled(false, comp1);
+
 	}
 
 	public boolean performOk() {

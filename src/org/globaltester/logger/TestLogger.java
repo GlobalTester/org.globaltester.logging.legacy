@@ -361,9 +361,9 @@ public class TestLogger {
 		}		
 		
 		//build the filenames
-		htmlFileName = logDir + File.pathSeparator +"gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
+		htmlFileName = logDir + File.separator +"gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
 				+ ".html";
-		logFileName = logDir + File.pathSeparator +"gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
+		logFileName = logDir + File.separator +"gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
 				+ ".log";
 	}
 

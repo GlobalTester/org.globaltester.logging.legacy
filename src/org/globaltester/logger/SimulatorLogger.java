@@ -358,9 +358,9 @@ public class SimulatorLogger {
 		}
 		
 		//build the filenames
-		htmlFileName = logDir + File.pathSeparator + "gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
+		htmlFileName = logDir + File.separator + "gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
 				+ ".html";
-		logFileName = logDir + File.pathSeparator + "gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
+		logFileName = logDir + File.separator + "gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
 				+ ".log";
 	}
 

@@ -12,6 +12,7 @@ package org.globaltester.logger;
  * Non-Disclosure Agreement you entered into with HJP.
  */
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.log4j.BasicConfigurator;
@@ -357,9 +358,9 @@ public class SimulatorLogger {
 		}
 		
 		//build the filenames
-		htmlFileName = logDir + "/gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
+		htmlFileName = logDir + File.pathSeparator + "gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
 				+ ".html";
-		logFileName = logDir + "/gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
+		logFileName = logDir + File.pathSeparator + "gt_sim_" + GTLogger.getIsoDate("yyyyMMddHHmmss")
 				+ ".log";
 	}
 

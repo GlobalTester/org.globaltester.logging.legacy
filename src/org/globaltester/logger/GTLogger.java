@@ -266,8 +266,8 @@ public class GTLogger {
 		}
 
 		//build the filenames
-		htmlFileName = logDir + "/gt_log.html";
-		logFileName = logDir + "/globaltester.log";
+		htmlFileName = logDir + File.pathSeparator + "gt_log.html";
+		logFileName = logDir + File.pathSeparator + "globaltester.log";
 
 		//remove existing files
 		File htmlLogFile = new File(htmlFileName);

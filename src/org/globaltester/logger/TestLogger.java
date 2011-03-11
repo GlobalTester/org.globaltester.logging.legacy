@@ -12,6 +12,7 @@ package org.globaltester.logger;
  * Non-Disclosure Agreement you entered into with HJP.
  */
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.log4j.BasicConfigurator;
@@ -360,9 +361,9 @@ public class TestLogger {
 		}		
 		
 		//build the filenames
-		htmlFileName = logDir + "/gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
+		htmlFileName = logDir + File.pathSeparator +"gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
 				+ ".html";
-		logFileName = logDir + "/gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
+		logFileName = logDir + File.pathSeparator +"gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
 				+ ".log";
 	}
 

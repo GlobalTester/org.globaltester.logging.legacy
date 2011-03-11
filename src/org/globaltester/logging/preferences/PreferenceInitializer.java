@@ -45,8 +45,8 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// directory name of logging files
 		store.setDefault(PreferenceConstants.P_GT_LOGGINGDIR, Platform
 				.getLocation().append(".metadata").toString());
-		store.setDefault(PreferenceConstants.P_TEST_LOGGINGDIR, "C:\\");
-		store.setDefault(PreferenceConstants.P_GT_SIM_LOGGINGDIR, "C:\\");
+		store.setDefault(PreferenceConstants.P_TEST_LOGGINGDIR, System.getProperty("user.home"));
+		store.setDefault(PreferenceConstants.P_GT_SIM_LOGGINGDIR, System.getProperty("user.home"));
 
 		// log level of log file
 		store.setDefault(PreferenceConstants.P_GT_LOGLEVEL,

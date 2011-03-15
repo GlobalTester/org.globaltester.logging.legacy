@@ -1,0 +1,12 @@
+Index: .project
+===================================================================
+--- .project	(revision 3906)
++++ .project	(working copy)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <projectDescription>
+-	<name>GlobalTester Logging</name>
++	<name>org.globaltester.logging</name>
+ 	<comment></comment>
+ 	<projects>
+ 	</projects>

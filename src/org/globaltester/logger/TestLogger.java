@@ -381,13 +381,14 @@ public class TestLogger {
 					"TestLogger must be initialized before initializing for a testcase");
 		}
 		
+		shutdownTestCaseLogger();
+		
 		//do not setup the logfile if single logging is disabled in the preferences
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		if (!store.getBoolean(PreferenceConstants.P_TEST_LOG_SINGLE_TESTCASES)) {
 			testCaseLogFileName = "";
+			return;
 		} 
-
-		shutdownTestCaseLogger();
 
 		testCaseLogFileName = getTestCaseLogFileName(testCaseId);
 		

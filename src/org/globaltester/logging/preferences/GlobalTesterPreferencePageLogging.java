@@ -57,6 +57,7 @@ public class GlobalTesterPreferencePageLogging extends
 	BooleanFieldEditor bfeTestPlainLogger;
 	BooleanFieldEditor bfeTestISO8601Logging;
 	BooleanFieldEditor bfeFrameworkConsoleLogger;
+	BooleanFieldEditor bfeTestSingleTestcaseLogging;
 	ScaleFieldEditor sfeTestLogLevel;
 	Label lblTestMinLevel;
 	Label lblTestMaxLevel;
@@ -166,6 +167,11 @@ public class GlobalTesterPreferencePageLogging extends
 				PreferenceConstants.P_GT_CONSOLELOGGING,
 				"Activate additional logging to STDOUT", testOptionsGroup);
 		addField(bfeFrameworkConsoleLogger);
+		
+		bfeTestSingleTestcaseLogging = new BooleanFieldEditor(
+				PreferenceConstants.P_TEST_LOG_SINGLE_TESTCASES,
+				"Add seperate logfile for each testcase", testOptionsGroup);
+		addField(bfeTestSingleTestcaseLogging);
 
 		sfeTestLogLevel = new ScaleFieldEditor(
 				PreferenceConstants.P_TEST_LOGLEVEL, "Level of logging",

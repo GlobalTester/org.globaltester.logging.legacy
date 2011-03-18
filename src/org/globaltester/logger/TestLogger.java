@@ -18,7 +18,6 @@ import java.io.IOException;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.FileAppender;
 import org.apache.log4j.HTMLLayout;
-import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
@@ -38,21 +37,28 @@ public class TestLogger {
 
 	private static final String APPENDER_PLAIN = "TestLogger_Plain_Appender";
 	private static final String APPENDER_HTML = "TestLogger_HTML_Appender";
+	private static final String APPENDER_TESTCASE = "TestLogger_TestCase_Appender";
 
 	// Logger
 	private static Logger logger = null;
 
-	//where to log
+	// Appender for single log files per test case
+	private static FileAppender testCaseAppender = null;
+
+	// where to log
 	private static String logDir;
+	private static String logDate;
 	private static String htmlFileName;
 	private static String logFileName;
+	private static String testCaseLogFileName;
+	private static PatternLayout fileLayout;
 
 	public static boolean isInitialized() {
-		if (logger == null) {
-			return false;
-		} else {
-			return true;
-		}
+		return logger != null;
+	}
+
+	public static boolean isTestCaseInitialized() {
+		return testCaseAppender != null;
 	}
 
 	/**
@@ -81,10 +87,21 @@ public class TestLogger {
 	 * call to init()
 	 */
 	public static void shutdown() {
-		if (logger != null) {
+		if (isInitialized()) {
 			logger.removeAllAppenders();
 		}
 		logger = null;
+	}
+
+	/**
+	 * Dispose the TestCaseLogger, following log messages will go only to the
+	 * session log until the next call to initTestCase()
+	 */
+	public static void shutdownTestCaseLogger() {
+		if (isTestCaseInitialized()) {
+			logger.removeAppender(testCaseAppender);
+		}
+		testCaseAppender = null;
 	}
 
 	/**
@@ -185,24 +202,23 @@ public class TestLogger {
 
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
-		//get the Logger from log4j
+		// get the Logger from log4j
 		BasicConfigurator.configure();
 		logger = Logger.getLogger("TestLogger");
 
-		//clean the logger (just to be sure)
+		// clean the logger (just to be sure)
 		logger.removeAllAppenders();
 		Logger.getRootLogger().removeAllAppenders();
 
-		//set the loglevel
+		// set the loglevel
 		String level = PreferenceConstants.LOGLEVELS[store
 				.getInt(PreferenceConstants.P_TEST_LOGLEVEL)];
 		logger.setLevel(Level.toLevel(level));
 
-		//configure filenames according to preferences
+		// configure filenames according to preferences
 		setFileNames();
 
-		// settings for logfiles		
-		Layout fileLayout;
+		// settings for logfiles
 		if (store.getBoolean(PreferenceConstants.P_TEST_USEISO8601LOGGING)) {
 			fileLayout = new PatternLayout("%d %-5p - %m%n");
 		} else {
@@ -223,7 +239,7 @@ public class TestLogger {
 			logFileName = "";
 		}
 
-		//settings for html file
+		// settings for html file
 		if (store.getBoolean(PreferenceConstants.P_TEST_HTMLLOGGING)) {
 			HTMLLayout htmlLayout = new HTMLLayout();
 			htmlLayout.setTitle(htmlFileName);
@@ -246,7 +262,7 @@ public class TestLogger {
 	 * Sets the logging level according to preferences
 	 */
 	public static void setLevel() {
-		if (logger == null) {
+		if (!isInitialized()) {
 			return;
 		}
 
@@ -264,7 +280,7 @@ public class TestLogger {
 	 */
 	public static void setLevel(String level) {
 
-		if (logger == null) {
+		if (!isInitialized()) {
 			return;
 		}
 
@@ -336,8 +352,12 @@ public class TestLogger {
 		return logFileName;
 	}
 
+	public static String getTestCaseLogFileName() {
+		return testCaseLogFileName;
+	}
+
 	/**
-	 * Initialize a the TestLogger for a new Test
+	 * Initialize the TestLogger for a new Test session
 	 * 
 	 * @param defaultLoggingDir
 	 *            will be used as logging directory if user has not selected
@@ -349,22 +369,68 @@ public class TestLogger {
 	}
 
 	/**
+	 * Initialize the TestLogger for a new TestCase
+	 * 
+	 * @param testCaseID
+	 *            will be used as part of the logfile name of the current
+	 *            testcase
+	 */
+	public static void initTestCase(String testCaseID) {
+		if (!isInitialized()) {
+			throw new RuntimeException(
+					"TestLogger must be initialized before initializing for a testcase");
+		}
+		
+		//do not setup the logfile if single logging is disabled in the preferences
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		if (!store.getBoolean(PreferenceConstants.P_TEST_LOG_SINGLE_TESTCASES)) {
+			testCaseLogFileName = "";
+		} 
+
+		shutdownTestCaseLogger();
+
+		setTestCaseFileName(testCaseID);
+		
+		// create new Appender for current TestCase and add it to logger
+		try {
+			testCaseAppender = new FileAppender(fileLayout, testCaseLogFileName);
+			testCaseAppender
+					.setName(APPENDER_TESTCASE + "(" + testCaseID + ")");
+			logger.addAppender(testCaseAppender);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Create file names for log files. Add iso formated date to file name.
 	 */
 	private static void setFileNames() {
-		//overwrite the logDir with value from PreferenceStore if manual settings are selected
+		// overwrite the logDir with value from PreferenceStore if manual
+		// settings are selected
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		boolean manualDirSettings = store
 				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
 		if (manualDirSettings) {
 			logDir = store.getString(PreferenceConstants.P_TEST_LOGGINGDIR);
-		}		
-		
-		//build the filenames
-		htmlFileName = logDir + File.separator +"gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
-				+ ".html";
-		logFileName = logDir + File.separator +"gt_" + GTLogger.getIsoDate("yyyyMMdd_HHmmss")
-				+ ".log";
+		}
+
+		// build the filenames
+		logDate = GTLogger.getIsoDate("yyyyMMdd_HHmmss");
+		htmlFileName = logDir + File.separator + "gt_" + logDate + ".html";
+		logFileName = logDir + File.separator + "gt_" + logDate + ".log";
 	}
+	
+	/**
+	 * Create file name for log files of single test case logs.
+	 * @param testCaseId
+	 */
+	private static void setTestCaseFileName(String testCaseId) {
+		if (!isInitialized()){
+			throw new RuntimeException("TestLogger must be initialized to be able to buils filenames for TestCaseLogfiles");
+		}
+		testCaseLogFileName = logDir + File.separator + "gt_" + logDate + "_" + testCaseId + ".log";
+	}
+
 
 }

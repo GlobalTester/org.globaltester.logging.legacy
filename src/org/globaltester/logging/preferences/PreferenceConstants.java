@@ -46,6 +46,7 @@ public class PreferenceConstants {
 	public static final String P_GT_PLAINLOGGING = "GT Framework - Use Plain Logging";
 	public static final String P_GT_SIM_PLAINLOGGING = "GT Simulator - Use Plain Logging";
 	public static final String P_TEST_PLAINLOGGING = "GT Test - Use Plain Logging";
+	public static final String P_TEST_LOG_SINGLE_TESTCASES = "GT Test - Add single logfiles for Testcases";
 
 	// log in ISO8601 format
 	public static final String P_GT_USEISO8601LOGGING = "GT Framework - Use ISO 8601 Logging";

@@ -65,6 +65,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.P_GT_PLAINLOGGING, true);
 		store.setDefault(PreferenceConstants.P_TEST_PLAINLOGGING, true);
 		store.setDefault(PreferenceConstants.P_GT_SIM_PLAINLOGGING, true);
+		store.setDefault(PreferenceConstants.P_TEST_LOG_SINGLE_TESTCASES, false);
 
 		// log in ISO8601 format
 		store.setDefault(PreferenceConstants.P_GT_USEISO8601LOGGING, true);

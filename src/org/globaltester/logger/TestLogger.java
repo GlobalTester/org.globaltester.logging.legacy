@@ -355,7 +355,7 @@ public class TestLogger {
 	public static String getTestCaseLogFileName() {
 		return testCaseLogFileName;
 	}
-
+	
 	/**
 	 * Initialize the TestLogger for a new Test session
 	 * 
@@ -371,11 +371,11 @@ public class TestLogger {
 	/**
 	 * Initialize the TestLogger for a new TestCase
 	 * 
-	 * @param testCaseID
+	 * @param testCaseId
 	 *            will be used as part of the logfile name of the current
 	 *            testcase
 	 */
-	public static void initTestCase(String testCaseID) {
+	public static void initTestCase(String testCaseId) {
 		if (!isInitialized()) {
 			throw new RuntimeException(
 					"TestLogger must be initialized before initializing for a testcase");
@@ -389,13 +389,13 @@ public class TestLogger {
 
 		shutdownTestCaseLogger();
 
-		setTestCaseFileName(testCaseID);
+		testCaseLogFileName = getTestCaseLogFileName(testCaseId);
 		
 		// create new Appender for current TestCase and add it to logger
 		try {
 			testCaseAppender = new FileAppender(fileLayout, testCaseLogFileName);
 			testCaseAppender
-					.setName(APPENDER_TESTCASE + "(" + testCaseID + ")");
+					.setName(APPENDER_TESTCASE + "(" + testCaseId + ")");
 			logger.addAppender(testCaseAppender);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -422,14 +422,15 @@ public class TestLogger {
 	}
 	
 	/**
-	 * Create file name for log files of single test case logs.
+	 * construct and return logFileName for a single test case
 	 * @param testCaseId
+	 * @return
 	 */
-	private static void setTestCaseFileName(String testCaseId) {
+	public static String getTestCaseLogFileName(String testCaseId) {
 		if (!isInitialized()){
 			throw new RuntimeException("TestLogger must be initialized to be able to buils filenames for TestCaseLogfiles");
 		}
-		testCaseLogFileName = logDir + File.separator + "gt_" + logDate + "_" + testCaseId + ".log";
+		return logDir + File.separator + "gt_" + logDate + "_" + testCaseId + ".log";
 	}
 
 

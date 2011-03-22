@@ -179,7 +179,7 @@ public class GlobalTesterPreferencePageLogging extends
 				PreferenceConstants.LOGLEVEL_FATAL, 1, 1);
 		addField(sfeTestLogLevel);
 		
-		//create caption for the loglevel scale field
+		//create caption for the log level scale field
 		Composite labelComposite3 = new Composite(testOptionsGroup,
 				SWT.NONE);
 		labelComposite3.setLayout(new FillLayout(SWT.HORIZONTAL));

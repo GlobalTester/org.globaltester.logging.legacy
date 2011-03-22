@@ -170,7 +170,7 @@ public class GlobalTesterPreferencePageLogging extends
 		
 		bfeTestSingleTestcaseLogging = new BooleanFieldEditor(
 				PreferenceConstants.P_TEST_LOG_SINGLE_TESTCASES,
-				"Add seperate logfile for each testcase", testOptionsGroup);
+				"Add separate logfile for each testcase", testOptionsGroup);
 		addField(bfeTestSingleTestcaseLogging);
 
 		sfeTestLogLevel = new ScaleFieldEditor(

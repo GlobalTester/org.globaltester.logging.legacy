@@ -39,6 +39,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 
 		// switch to set manual directory settings
+		store.setDefault(PreferenceConstants.P_MANUALFRAMEWORKDIRSETTINGS, false);
 		store.setDefault(PreferenceConstants.P_MANUALDIRSETTINGS, false);
 		store.setDefault(PreferenceConstants.P_USE_SIM_LOG, false);
 

@@ -29,6 +29,7 @@ public class PreferenceConstants {
 	public static final String P_TEST_LOGGINGDIR = "GT Test - Logging directory";
 
 	// switch to set manual directory settings
+	public static final String P_MANUALFRAMEWORKDIRSETTINGS = "manualFrameworkDirSettings";
 	public static final String P_MANUALDIRSETTINGS = "manualDirSettings";
 	public static final String P_USE_SIM_LOG = "Use GT Simulator Logging";
 

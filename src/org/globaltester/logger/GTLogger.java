@@ -258,7 +258,7 @@ public class GTLogger {
 		//get the logDir from PreferenceStore if manual settings are selected
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		boolean manualDirSettings = store
-				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
+				.getBoolean(PreferenceConstants.P_MANUALFRAMEWORKDIRSETTINGS);
 		if (manualDirSettings) {
 			logDir = store.getString(PreferenceConstants.P_GT_LOGGINGDIR);
 		} else {

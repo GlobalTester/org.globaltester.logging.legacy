@@ -45,18 +45,28 @@ public class GlobalTesterPreferencePageLogging extends
 		FieldEditorPreferencePage implements IWorkbenchPreferencePage {
 
 	//editors for directory options
-	Group directoryGroup;
-	BooleanFieldEditor bfeManualSettings;
+	Group frameworkOptionsGroup;
+	BooleanFieldEditor bfeFrameworkManualSettings;
+	private Composite compFrameworkDirEditor;
 	ValidateDirectoryFieldEditor dfeFrameworkLoggingDir;
-	ValidateDirectoryFieldEditor dfeTestLoggingDir;
-
+	
+	BooleanFieldEditor bfeFrameworkPlainLogging;
+	BooleanFieldEditor bfeFrameworkISO8601Logging;
+	BooleanFieldEditor bfeFrameworkConsoleLogger;
+	ScaleFieldEditor sfeFrameworkLogLevel;
+	Label lblFrameworkMinLevel;
+	Label lblFrameworkMaxLevel;
+	
 	//editors for test logging options
 	Group testOptionsGroup;
+	BooleanFieldEditor bfeTestManualSettings;
+	private Composite compTestDirEditor;
+	ValidateDirectoryFieldEditor dfeTestLoggingDir;
 	BooleanFieldEditor bfeTestPersistentMarker;
 	BooleanFieldEditor bfeTestHtmlLogger;
 	BooleanFieldEditor bfeTestPlainLogger;
 	BooleanFieldEditor bfeTestISO8601Logging;
-	BooleanFieldEditor bfeFrameworkConsoleLogger;
+	BooleanFieldEditor bfeTestConsoleLogger;
 	BooleanFieldEditor bfeTestSingleTestcaseLogging;
 	ScaleFieldEditor sfeTestLogLevel;
 	Label lblTestMinLevel;
@@ -65,6 +75,7 @@ public class GlobalTesterPreferencePageLogging extends
 	//editors for simulator logging options
 	Group simOptionsGroup;
 	BooleanFieldEditor bfeUseSimLogs;
+	private Composite compSimDirEditor;
 	ValidateDirectoryFieldEditor dfeSimLoggingDir;
 	BooleanFieldEditor bfeSimHtmlLogger;
 	BooleanFieldEditor bfeSimPlainLogger;
@@ -74,9 +85,9 @@ public class GlobalTesterPreferencePageLogging extends
 	Label lblSimMaxLevel;
 
 	//variables needed for enabling/disabling of FieldEditors
-	private boolean manualDirSetting; // whether logging directories are manually selected
+	private boolean manualFrameworkDirSetting; // whether framework logging directory is manually selected
+	private boolean manualTestDirSetting; // whether test logging directory is manually selected
 	private boolean useSimLogs; // whether logging directories are manually selected
-	private Composite comp1;
 
 	public GlobalTesterPreferencePageLogging() {
 		super(GRID);
@@ -84,7 +95,10 @@ public class GlobalTesterPreferencePageLogging extends
 		setPreferenceStore(store);
 		setDescription("GlobalTester preference page");
 
-		manualDirSetting = store
+		manualFrameworkDirSetting = store
+				.getBoolean(PreferenceConstants.P_MANUALFRAMEWORKDIRSETTINGS);
+		
+		manualTestDirSetting = store
 				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
 		
 		useSimLogs = store
@@ -108,33 +122,86 @@ public class GlobalTesterPreferencePageLogging extends
 		GridLayout layout = new GridLayout(1, false);
 		container.setLayout(layout);
 
-		//settings for log directories
-		directoryGroup = new Group(container, SWT.NONE);
-		directoryGroup.setText("Directories and files");
+		//preferences for framework logging
+		frameworkOptionsGroup = new Group(container, SWT.NONE);
+		frameworkOptionsGroup.setText("Framework logging");
 		GridData gd = new GridData(GridData.FILL, GridData.FILL, true, false);
 		gd.horizontalSpan = 2;
-		directoryGroup.setLayoutData(gd);
-		directoryGroup.setLayout(new GridLayout(2, false));
+		frameworkOptionsGroup.setLayoutData(gd);
+		frameworkOptionsGroup.setLayout(new GridLayout(2, false));
 
-		bfeManualSettings = new BooleanFieldEditor(
-				PreferenceConstants.P_MANUALDIRSETTINGS,
-				"Manual setting of directories and files", directoryGroup);
-		addField(bfeManualSettings);
+		bfeFrameworkManualSettings = new BooleanFieldEditor(
+				PreferenceConstants.P_MANUALFRAMEWORKDIRSETTINGS,
+				"Use manual directory setting", frameworkOptionsGroup);
+		addField(bfeFrameworkManualSettings);
 
+		compFrameworkDirEditor = new Composite(frameworkOptionsGroup,
+				SWT.NONE);
+		compFrameworkDirEditor.setLayout(new FillLayout(SWT.HORIZONTAL));
+		GridData gd_compFrameworkDirEditor = new GridData(GridData.FILL, GridData.FILL, true,
+				false);
+		gd_compFrameworkDirEditor.horizontalSpan = 4;
+		gd_compFrameworkDirEditor.grabExcessHorizontalSpace = true;
+		compFrameworkDirEditor.setLayoutData(gd_compFrameworkDirEditor);
+		
 		dfeFrameworkLoggingDir = new ValidateDirectoryFieldEditor(
 				PreferenceConstants.P_GT_LOGGINGDIR,
-				"&Framework logging directory:", directoryGroup);
+				"&Framework logging directory:", compFrameworkDirEditor);
 		dfeFrameworkLoggingDir.setEmptyStringAllowed(false);
-		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
+		dfeFrameworkLoggingDir.setEnabled(manualFrameworkDirSetting, compFrameworkDirEditor);
 		addField(dfeFrameworkLoggingDir);
 		
-		dfeTestLoggingDir = new ValidateDirectoryFieldEditor(
-				PreferenceConstants.P_TEST_LOGGINGDIR,
-				"&Test logging directory:", directoryGroup);
-		dfeTestLoggingDir.setEmptyStringAllowed(false);
-		dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
-		addField(dfeTestLoggingDir);
 		
+		bfeFrameworkPlainLogging = new BooleanFieldEditor(
+				PreferenceConstants.P_GT_PLAINLOGGING,
+				"Use standard logging (plain text file)", frameworkOptionsGroup);
+		addField(bfeFrameworkPlainLogging);
+
+		bfeFrameworkISO8601Logging = new BooleanFieldEditor(
+				PreferenceConstants.P_GT_USEISO8601LOGGING,
+				"Use ISO 8601 logging in text file", frameworkOptionsGroup);
+		addField(bfeFrameworkISO8601Logging);
+		
+		bfeFrameworkConsoleLogger = new BooleanFieldEditor(
+				PreferenceConstants.P_GT_CONSOLELOGGING,
+				"Activate additional logging to STDOUT", frameworkOptionsGroup);
+		addField(bfeFrameworkConsoleLogger);
+				
+		sfeFrameworkLogLevel = new ScaleFieldEditor(
+				PreferenceConstants.P_GT_LOGLEVEL, "Level of logging",
+				frameworkOptionsGroup, PreferenceConstants.LOGLEVEL_TRACE,
+				PreferenceConstants.LOGLEVEL_FATAL, 1, 1);
+		addField(sfeFrameworkLogLevel);
+		
+		//create caption for the log level scale field
+		Composite compFrameworkLogLevelLabels= new Composite(frameworkOptionsGroup,
+				SWT.NONE);
+		compFrameworkLogLevelLabels.setLayout(new FillLayout(SWT.HORIZONTAL));
+		GridData gdFrameworkLogLevelLabels = new GridData(GridData.FILL, GridData.FILL, true,
+				false);
+		gdFrameworkLogLevelLabels.horizontalSpan = 3;
+		gdFrameworkLogLevelLabels.grabExcessHorizontalSpace = true;
+		compFrameworkLogLevelLabels.setLayoutData(gdFrameworkLogLevelLabels);
+		//add each label followed by an empty spacer label
+		for (int i = 0; i < PreferenceConstants.LOGLEVELS.length; i++) {
+			Label lbl = new Label(compFrameworkLogLevelLabels, SWT.CENTER);
+			lbl.setText(PreferenceConstants.LOGLEVELS[i]);
+			if (i + 1 < PreferenceConstants.LOGLEVELS.length) {
+				new Label(compFrameworkLogLevelLabels, SWT.CENTER);
+			}
+		}
+		
+		lblFrameworkMinLevel = new Label(frameworkOptionsGroup, SWT.LEFT);
+		lblFrameworkMinLevel.setText("everything is logged");
+		lblFrameworkMinLevel.setLayoutData(new GridData(GridData.BEGINNING, GridData.FILL,
+				true, false));
+
+		lblFrameworkMaxLevel = new Label(frameworkOptionsGroup, SWT.RIGHT);
+		lblFrameworkMaxLevel.setText("only fatal problems are logged");
+		lblFrameworkMaxLevel.setLayoutData(new GridData(GridData.END, GridData.FILL,
+						true, false));
+				
+				
 		//preferences for logging of tests
 		testOptionsGroup = new Group(container, SWT.NONE);
 		testOptionsGroup.setText("Logging of test runs");
@@ -143,6 +210,27 @@ public class GlobalTesterPreferencePageLogging extends
 		testOptionsGroup.setLayoutData(gd3);
 		testOptionsGroup.setLayout(new GridLayout(2, false));
 
+		bfeTestManualSettings = new BooleanFieldEditor(
+				PreferenceConstants.P_MANUALDIRSETTINGS,
+				"Use manual directory setting", testOptionsGroup);
+		addField(bfeTestManualSettings);
+
+		compTestDirEditor = new Composite(testOptionsGroup,
+				SWT.NONE);
+		compTestDirEditor.setLayout(new FillLayout(SWT.HORIZONTAL));
+		GridData gd_compTestDirEditor = new GridData(GridData.FILL, GridData.FILL, true,
+				false);
+		gd_compTestDirEditor.horizontalSpan = 4;
+		gd_compTestDirEditor.grabExcessHorizontalSpace = true;
+		compTestDirEditor.setLayoutData(gd_compTestDirEditor);
+		
+		dfeTestLoggingDir = new ValidateDirectoryFieldEditor(
+				PreferenceConstants.P_TEST_LOGGINGDIR,
+				"&Test logging directory:", compTestDirEditor);
+		dfeTestLoggingDir.setEmptyStringAllowed(false);
+		dfeTestLoggingDir.setEnabled(manualTestDirSetting, compTestDirEditor);
+		addField(dfeTestLoggingDir);
+		
 		bfeTestPersistentMarker = new BooleanFieldEditor(
 				PreferenceConstants.P_TEST_PERSISTENTMARKER,
 				"Store markers in log file persistently (and not only for the current session)", testOptionsGroup);
@@ -162,11 +250,6 @@ public class GlobalTesterPreferencePageLogging extends
 				PreferenceConstants.P_TEST_USEISO8601LOGGING,
 				"Use ISO 8601 logging in text file", testOptionsGroup);
 		addField(bfeTestISO8601Logging);
-		
-		bfeFrameworkConsoleLogger = new BooleanFieldEditor(
-				PreferenceConstants.P_GT_CONSOLELOGGING,
-				"Activate additional logging to STDOUT", testOptionsGroup);
-		addField(bfeFrameworkConsoleLogger);
 		
 		bfeTestSingleTestcaseLogging = new BooleanFieldEditor(
 				PreferenceConstants.P_TEST_LOG_SINGLE_TESTCASES,
@@ -221,35 +304,38 @@ public class GlobalTesterPreferencePageLogging extends
 					"Generate simulator logging files with following options", simOptionsGroup);
 			addField(bfeUseSimLogs);
 			
-			comp1 = new Composite(simOptionsGroup,
+			compSimDirEditor = new Composite(simOptionsGroup,
 					SWT.NONE);
-			comp1.setLayout(new FillLayout(SWT.HORIZONTAL));
-			GridData gd_comp1 = new GridData(GridData.FILL, GridData.FILL, true,
+			compSimDirEditor.setLayout(new FillLayout(SWT.HORIZONTAL));
+			GridData gd_compSimDirEditor = new GridData(GridData.FILL, GridData.FILL, true,
 					false);
-			gd_comp1.horizontalSpan = 4;
-			gd_comp1.grabExcessHorizontalSpace = true;
-			comp1.setLayoutData(gd_comp1);
+			gd_compSimDirEditor.horizontalSpan = 4;
+			gd_compSimDirEditor.grabExcessHorizontalSpace = true;
+			compSimDirEditor.setLayoutData(gd_compSimDirEditor);
 			
 			dfeSimLoggingDir = new ValidateDirectoryFieldEditor(
 					PreferenceConstants.P_GT_SIM_LOGGINGDIR,
-					"&Simulator logging directory:", comp1);
+					"&Simulator logging directory:", compSimDirEditor);
 			dfeSimLoggingDir.setEmptyStringAllowed(false);
-			dfeSimLoggingDir.setEnabled(useSimLogs, comp1);
+			dfeSimLoggingDir.setEnabled(useSimLogs, compSimDirEditor);
 			addField(dfeSimLoggingDir);
 			
 			bfeSimHtmlLogger = new BooleanFieldEditor(
 					PreferenceConstants.P_GT_SIM_HTMLLOGGING,
 					"Activate additional HTML log file", simOptionsGroup);
+			bfeSimHtmlLogger.setEnabled(useSimLogs, simOptionsGroup);
 			addField(bfeSimHtmlLogger);
 	
 			bfeSimPlainLogger = new BooleanFieldEditor(
 					PreferenceConstants.P_GT_SIM_PLAINLOGGING,
 					"Use standard logging (plain text file)", simOptionsGroup);
+			bfeSimPlainLogger.setEnabled(useSimLogs, simOptionsGroup);
 			addField(bfeSimPlainLogger);
 	
 			bfeSimISO8601Logging = new BooleanFieldEditor(
 					PreferenceConstants.P_GT_SIM_USEISO8601LOGGING,
 					"Use ISO 8601 logging in text file", simOptionsGroup);
+			bfeSimISO8601Logging.setEnabled(useSimLogs, simOptionsGroup);
 			addField(bfeSimISO8601Logging);
 			
 			
@@ -299,14 +385,34 @@ public class GlobalTesterPreferencePageLogging extends
 		super.propertyChange(event);
 		if (event.getProperty().equals(FieldEditor.VALUE)) {
 
-			if (event.getSource() == bfeManualSettings) {
-				manualDirSetting = ((Boolean) event.getNewValue())
+			if (event.getSource() == bfeFrameworkManualSettings) {
+				manualFrameworkDirSetting = ((Boolean) event.getNewValue())
 						.booleanValue();
-				if (manualDirSetting == true) {
-					dfeFrameworkLoggingDir.setEnabled(true,directoryGroup);
-					dfeTestLoggingDir.setEnabled(true, directoryGroup);
-					if (dfeFrameworkLoggingDir.isValid() && dfeFrameworkLoggingDir.getStringValue() !="" &&
-							dfeTestLoggingDir.isValid() && dfeTestLoggingDir.getStringValue() !=""	) {
+				if (manualFrameworkDirSetting == true) {
+					dfeFrameworkLoggingDir.setEnabled(true,compFrameworkDirEditor);
+					if (dfeFrameworkLoggingDir.isValid() && dfeFrameworkLoggingDir.getStringValue() !="") {
+						setErrorMessage("");	
+						setValid(true);
+					} else {	
+						setErrorMessage("Use a valid directory!");
+						setValid(false);
+					}
+				} else {
+					dfeFrameworkLoggingDir.setEnabled(false,compFrameworkDirEditor);
+					setErrorMessage(null);
+					setValid(true);
+				}
+
+
+
+			}
+			
+			if (event.getSource() == bfeTestManualSettings) {
+				manualTestDirSetting = ((Boolean) event.getNewValue())
+						.booleanValue();
+				if (manualTestDirSetting == true) {
+					dfeTestLoggingDir.setEnabled(true, compTestDirEditor);
+					if (dfeTestLoggingDir.isValid() && dfeTestLoggingDir.getStringValue() !=""	) {
 						setErrorMessage(null);	
 						setValid(true);
 					} else {	
@@ -314,8 +420,7 @@ public class GlobalTesterPreferencePageLogging extends
 						setValid(false);
 					}
 				} else {
-					dfeFrameworkLoggingDir.setEnabled(false,directoryGroup);
-					dfeTestLoggingDir.setEnabled(false, directoryGroup);
+					dfeTestLoggingDir.setEnabled(false, compTestDirEditor);
 					setErrorMessage(null);
 					setValid(true);
 				}
@@ -328,7 +433,7 @@ public class GlobalTesterPreferencePageLogging extends
 				useSimLogs = ((Boolean) event.getNewValue())
 						.booleanValue();
 				if (useSimLogs == true) {
-					dfeSimLoggingDir.setEnabled(true,comp1);
+					dfeSimLoggingDir.setEnabled(true,compSimDirEditor);
 					if (dfeSimLoggingDir.isValid() && dfeSimLoggingDir.getStringValue() !="") {
 						setErrorMessage(null);	
 						setValid(true);
@@ -338,11 +443,14 @@ public class GlobalTesterPreferencePageLogging extends
 					}
 						
 				} else {
-					dfeSimLoggingDir.setEnabled(false,comp1);
+					dfeSimLoggingDir.setEnabled(false,compSimDirEditor);
 					setErrorMessage(null);
 					setValid(true);
 				}
-					
+				
+				bfeSimHtmlLogger.setEnabled(useSimLogs, simOptionsGroup);
+				bfeSimPlainLogger.setEnabled(useSimLogs, simOptionsGroup);
+				bfeSimISO8601Logging.setEnabled(useSimLogs, simOptionsGroup);
 			}
 			
 		}
@@ -354,15 +462,18 @@ public class GlobalTesterPreferencePageLogging extends
 				"Switched GT Logging Preference Page back do default values");
 
 		//enable/disable test logging options
-		manualDirSetting = Activator.getDefault().getPreferenceStore()
+		manualTestDirSetting = Activator.getDefault().getPreferenceStore()
 				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
 
 		//enable or disable the loggingDir editor according to selection
-		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);
-		dfeTestLoggingDir.setEnabled(manualDirSetting, directoryGroup);
+		dfeFrameworkLoggingDir.setEnabled(manualFrameworkDirSetting, compFrameworkDirEditor);
+		dfeTestLoggingDir.setEnabled(manualTestDirSetting, compTestDirEditor);
 		
-		//enable or disable the simulator logging according to selection
-		dfeSimLoggingDir.setEnabled(false, comp1);
+		//disable the simulator logging
+		dfeSimLoggingDir.setEnabled(false, compSimDirEditor);
+		bfeSimHtmlLogger.setEnabled(false, simOptionsGroup);
+		bfeSimPlainLogger.setEnabled(false, simOptionsGroup);
+		bfeSimISO8601Logging.setEnabled(false, simOptionsGroup);
 
 	}
 

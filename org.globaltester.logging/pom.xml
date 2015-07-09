@@ -10,6 +10,6 @@
   </parent>
   <groupId>org.globaltester</groupId>
   <artifactId>org.globaltester.logging</artifactId>
-  <version>2.3.8</version>
+  <version>2.4.0</version>
   <packaging>eclipse-plugin</packaging>
 </project>

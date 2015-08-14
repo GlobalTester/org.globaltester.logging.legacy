@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: GlobalTester Logging
-Bundle-SymbolicName: org.globaltester.logging;singleton:=true
-Bundle-Version: 2.4.0
+Bundle-Name: GlobalTester Logging (legacy)
+Bundle-SymbolicName: org.globaltester.logging.legacy;singleton:=true
+Bundle-Version: 2.4.0.qualifier
 Bundle-Activator: org.globaltester.logging.Activator
 Bundle-Vendor: HJP Consulting GmbH
 Require-Bundle: org.eclipse.ui,

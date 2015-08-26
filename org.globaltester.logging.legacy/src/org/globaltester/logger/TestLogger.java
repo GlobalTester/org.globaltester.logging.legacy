@@ -434,5 +434,9 @@ public class TestLogger {
 		return logDir + File.separator + "gt_" + logDate + "_" + testCaseId + ".log";
 	}
 
+	public static String getLogDir() {
+		return logDir;
+	}
+
 
 }

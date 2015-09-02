@@ -104,6 +104,37 @@ public class GlobalTesterPreferencePageLogging extends
 		useSimLogs = store
 				.getBoolean(PreferenceConstants.P_USE_SIM_LOG);
 	}
+	
+	
+	/**
+	 * Checks if necessary options for workspace refreshing are checked. If not
+	 * it shows an error in the headline of the pref page.
+	 * 
+	 * @return true if all prefs are set or false if not
+	 */
+	private boolean workspacePrefsOk(){
+		// get workspace preferences
+		boolean refreshOpt = Platform.getPreferencesService().getBoolean("org.eclipse.core.resources", "refresh.enabled", false, null);
+		boolean refreshLightOpt = Platform.getPreferencesService().getBoolean("org.eclipse.core.resources", "refresh.lightweight.enabled", false, null);
+		String warn;
+		
+		if(!refreshOpt && !refreshLightOpt){
+			warn = "Also set 'Refresh using native hook or polling' and 'Refresh on Access' in your workspace preferences (General->Workspace)";
+			setErrorMessage(warn);
+			return false;
+		}
+		if(!refreshOpt){
+			warn = "Also set 'Refresh using native hook or polling' in your workspace preferences (General->Workspace)";
+			setErrorMessage(warn);
+			return false;
+		}
+		if(!refreshLightOpt){
+			warn = "Also set 'Refresh on Access' in your workspace preferences (General->Workspace)";
+			setErrorMessage(warn);
+			return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Creates the field editors. Field editors are abstractions of the common
@@ -413,8 +444,15 @@ public class GlobalTesterPreferencePageLogging extends
 				if (manualTestDirSetting == true) {
 					dfeTestLoggingDir.setEnabled(true, compTestDirEditor);
 					if (dfeTestLoggingDir.isValid() && dfeTestLoggingDir.getStringValue() !=""	) {
-						setErrorMessage(null);	
-						setValid(true);
+						
+						if (workspacePrefsOk()) {
+							//everything is ok
+							setErrorMessage(null);
+							setValid(true);
+						}else{
+							//workspace prefs not set as required
+							setValid(false);
+						}
 					} else {	
 						setErrorMessage("Use a valid directory!");
 						setValid(false);

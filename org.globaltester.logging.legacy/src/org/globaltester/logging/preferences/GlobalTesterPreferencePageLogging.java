@@ -451,7 +451,7 @@ public class GlobalTesterPreferencePageLogging extends
 							setValid(true);
 						}else{
 							//workspace prefs not set as required
-							setValid(false);
+//							setValid(false);
 						}
 					} else {	
 						setErrorMessage("Use a valid directory!");

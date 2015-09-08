@@ -429,7 +429,7 @@ public class TestLogger {
 	 */
 	public static String getTestCaseLogFileName(String testCaseId) {
 		if (!isInitialized()){
-			throw new RuntimeException("TestLogger must be initialized to be able to buils filenames for TestCaseLogfiles");
+			throw new RuntimeException("TestLogger must be initialized to be able to build filenames for TestCaseLogfiles");
 		}
 		return logDir + File.separator + "gt_" + logDate + "_" + testCaseId + ".log";
 	}

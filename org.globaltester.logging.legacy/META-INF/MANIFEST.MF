@@ -6,7 +6,8 @@ Bundle-Version: 2.4.1
 Bundle-Activator: org.globaltester.logging.Activator
 Bundle-Vendor: HJP Consulting GmbH
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
+ org.eclipse.core.runtime,
+ org.globaltester.base
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: lib/log4j-1.2.14.jar,

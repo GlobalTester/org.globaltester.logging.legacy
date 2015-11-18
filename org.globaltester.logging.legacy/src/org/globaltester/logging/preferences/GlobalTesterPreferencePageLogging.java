@@ -32,6 +32,7 @@ import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.globaltester.logger.GTLogger;
 import org.globaltester.logging.Activator;
+import org.globaltester.preferences.ValidateDirectoryFieldEditor;
 
 /**
  * This class stores the properties of the plugin

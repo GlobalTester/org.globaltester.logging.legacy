@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GlobalTester Logging UserGuide 
+Bundle-SymbolicName: org.globaltester.logging.legacy.doc;singleton:=true
+Bundle-Version: 3.0.0.qualifier
+Bundle-Vendor: HJP Consulting GmbH
+Require-Bundle: org.eclipse.help,
+ org.eclipse.help.base;bundle-version="3.5.3",
+ org.globaltester.core.doc;bundle-version="3.0.0"
+

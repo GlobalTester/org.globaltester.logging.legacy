@@ -4,6 +4,19 @@
    
 
  <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.text"
+            file-extensions="log"
+            id="org.globaltester.logging.contenttypes.GtLogfile"
+            name="GlobalTester Logfile"
+            priority="normal">
+         <describer
+               class="org.globaltester.logging.content.GtLogfileContentDescriber">
+         </describer>
+      </content-type>
+   </extension>
+   <extension
        point="org.eclipse.ui.preferencePages">
     <page
 		name="Logging"

@@ -1,7 +1,6 @@
 package org.globaltester.logging.ui.preferences;
 
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
@@ -16,7 +15,6 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.globaltester.logging.Activator;
 import org.globaltester.logging.logger.GTLogger;
 import org.globaltester.logging.preferences.PreferenceConstants;
@@ -70,8 +68,8 @@ public class GlobalTesterPreferencePageLogging extends
 	public GlobalTesterPreferencePageLogging() {
 		super(GRID);
 		
-		IPreferenceStore store = new ScopedPreferenceStore(new InstanceScope(),
-				Activator.PLUGIN_ID);
+		IPreferenceStore store = Activator.getDefault()
+				.getPreferenceStore();
 		setPreferenceStore(store);
 		setDescription("GlobalTester preference page");
 
@@ -346,9 +344,8 @@ public class GlobalTesterPreferencePageLogging extends
 				"Switched GT Logging Preference Page back do default values");
 
 		//enable/disable test logging options
-		manualDirSetting = new ScopedPreferenceStore(new InstanceScope(),
-				Activator.PLUGIN_ID)
-				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
+		manualDirSetting = Activator.getDefault()
+				.getPreferenceStore().getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
 
 		//enable or disable the loggingDir editor according to selection
 		dfeFrameworkLoggingDir.setEnabled(manualDirSetting, directoryGroup);

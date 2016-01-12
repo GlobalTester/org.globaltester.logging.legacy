@@ -24,8 +24,7 @@ import org.globaltester.logging.Activator;
  * This class stores the properties of the plugin Class used to initialize
  * default preference values
  * 
- * @version Release 2.2.0
- * @author Holger Funke
+ * @author amay, hfunke
  * 
  */
 
@@ -36,8 +35,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 * at PreferenceConstants.java
 	 */
 	public void initializeDefaultPreferences() {
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-
+		
+		IPreferenceStore store = Activator.getDefault()
+				.getPreferenceStore();
+		
 		// switch to set manual directory settings
 		store.setDefault(PreferenceConstants.P_MANUALFRAMEWORKDIRSETTINGS, false);
 		store.setDefault(PreferenceConstants.P_MANUALDIRSETTINGS, false);
@@ -46,8 +47,10 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		// directory name of logging files
 		store.setDefault(PreferenceConstants.P_GT_LOGGINGDIR, Platform
 				.getLocation().append(".metadata").toString());
-		store.setDefault(PreferenceConstants.P_TEST_LOGGINGDIR, System.getProperty("user.home"));
-		store.setDefault(PreferenceConstants.P_GT_SIM_LOGGINGDIR, System.getProperty("user.home"));
+		store.setDefault(PreferenceConstants.P_TEST_LOGGINGDIR,
+				System.getProperty("user.home"));
+		store.setDefault(PreferenceConstants.P_GT_SIM_LOGGINGDIR,
+				System.getProperty("user.home"));
 
 		// log level of log file
 		store.setDefault(PreferenceConstants.P_GT_LOGLEVEL,
@@ -72,14 +75,16 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PreferenceConstants.P_GT_USEISO8601LOGGING, true);
 		store.setDefault(PreferenceConstants.P_TEST_USEISO8601LOGGING, true);
 		store.setDefault(PreferenceConstants.P_GT_SIM_USEISO8601LOGGING, true);
-		
+
 		// switch to use console logging
 		store.setDefault(PreferenceConstants.P_GT_CONSOLELOGGING, true);
 
 		// store all marker of log file persistent
 		store.setDefault(PreferenceConstants.P_TEST_PERSISTENTMARKER, false);
-
 		
+		//if TestCase or log file should open on double click
+		store.setDefault(PreferenceConstants.P_DOUBLECLICKRESULTVIEW, 0);
+
 	}
 
 }

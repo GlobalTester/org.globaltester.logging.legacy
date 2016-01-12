@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: GlobalTester Logging UI
+Bundle-SymbolicName: org.globaltester.logging.legacy.ui;singleton:=true
+Bundle-Version: 3.0.1
+Bundle-Activator: org.globaltester.logging.ui.Activator
+Bundle-Vendor: HJP Consulting GmbH
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.globaltester.logging.legacy;bundle-version="3.0.0",
+ org.eclipse.ui.editors;bundle-version="3.6.1",
+ org.eclipse.jface.text;bundle-version="3.6.1",
+ org.globaltester.core.ui;bundle-version="3.0.0",
+ org.globaltester.core;bundle-version="3.0.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.globaltester.logging.ui.editors,
+ org.globaltester.logging.ui.preferences

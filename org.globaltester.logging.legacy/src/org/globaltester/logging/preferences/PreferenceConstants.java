@@ -72,6 +72,9 @@ public class PreferenceConstants {
 	// tranlate loglevels to according Strings
 	public static final String[] LOGLEVELS = new String[] { "TRACE", "DEBUG",
 			"INFO", "WARN", "ERROR", "FATAL" };
+	public static final String P_DOUBLECLICKRESULTVIEW =  "Double click in result view ";
+	public static final String TEST_CASE = "Test Case";	
+	public static final String LOG_FILE = "Log File";
 	
 
 }

@@ -1,0 +1,7 @@
+Version 2.4.1 (12.11.2015)
+
+* Allow changing preference page when current values are inconsistent
+* added method to return the current logging directory used by the logger
+* refactor bundle to legacy
+
+

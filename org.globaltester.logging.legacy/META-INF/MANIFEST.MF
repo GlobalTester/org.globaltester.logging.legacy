@@ -5,9 +5,11 @@ Bundle-SymbolicName: org.globaltester.logging.legacy;singleton:=true
 Bundle-Version: 3.0.1
 Bundle-Activator: org.globaltester.logging.Activator
 Bundle-Vendor: HJP Consulting GmbH
-Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- org.globaltester.base
+Require-Bundle: org.globaltester.base,
+ org.eclipse.ui.workbench,
+ org.eclipse.jface,
+ org.eclipse.swt,
+ org.eclipse.core.runtime
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy; exclude:="org.globaltester.logging.content"
 Bundle-ClassPath: lib/log4j-1.2.14.jar,
@@ -19,3 +21,4 @@ Export-Package: org.apache.log4j,
  org.globaltester.logging.content,
  org.globaltester.logging.logger,
  org.globaltester.logging.preferences
+Import-Package: org.osgi.framework;version="1.8.0"

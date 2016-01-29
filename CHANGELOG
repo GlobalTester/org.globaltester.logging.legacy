@@ -1,3 +1,9 @@
+Version 2.4.2 (29.01.2016)
+
+* Integrate existing legacy bundles
+* Refactor Validate(File/Dir)FieldEditor to org.globaltester.base
+
+
 Version 2.4.1 (12.11.2015)
 
 * Allow changing preference page when current values are inconsistent

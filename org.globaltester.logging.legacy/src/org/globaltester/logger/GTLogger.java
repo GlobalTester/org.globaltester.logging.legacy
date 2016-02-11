@@ -73,7 +73,11 @@ public class GTLogger {
 		Logger.getRootLogger().removeAllAppenders();
 
 		//initialize all appenders with the options from preferences
-		checkOptions();
+		if (Platform.isRunning()){
+			checkOptions();	
+		} else {
+			logger.addAppender(new ConsoleAppender(new PatternLayout("%m%n")));
+		}
 
 	}
 

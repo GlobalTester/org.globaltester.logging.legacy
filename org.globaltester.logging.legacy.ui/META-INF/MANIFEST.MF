@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: GlobalTester Logging UI
+Bundle-Name: GT Logging Legacy UI
 Bundle-SymbolicName: org.globaltester.logging.legacy.ui;singleton:=true
 Bundle-Version: 3.0.3
 Bundle-Activator: org.globaltester.logging.ui.Activator

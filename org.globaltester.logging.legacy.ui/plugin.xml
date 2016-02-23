@@ -4,8 +4,8 @@
 <extension
        point="org.eclipse.ui.preferencePages">
     <page
-		name="Logging"
-		category="org.globaltester.core.ui.preferences.GlobalTesterPreferencePage"
+		name="Logging GT3"
+		category="org.globaltester.preferences.GlobalTesterPreferencePage"
 		class="org.globaltester.logging.ui.preferences.GlobalTesterPreferencePageLogging"
     	id="org.globaltester.logging.preferences.GlobalTesterPreferencePageLogging">
     </page>

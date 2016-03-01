@@ -6,5 +6,4 @@ Bundle-Version: 3.0.4
 Bundle-Vendor: HJP Consulting GmbH
 Fragment-Host: org.globaltester.logging.legacy.ui;bundle-version="3.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit,
- org.globaltester.smartcardshell;bundle-version="3.0.0"
+Require-Bundle: org.junit

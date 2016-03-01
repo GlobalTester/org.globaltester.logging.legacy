@@ -2,7 +2,6 @@ package org.globaltester.logging.ui.editors;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import opencard.core.util.HexString;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,12 +16,8 @@ public class ApduCommandTextHoverTest {
 	}
 
 	private String buildApduLogfileSegment(String apduString) {
-		
-		byte[] apduBytes = HexString.parseHexString(apduString.replaceAll(
-				"\\s+", ""));
-
 		String retVal = "2012-03-27 15:23:24,289 INFO  - => Command APDU [\n";
-		retVal += HexString.dump(apduBytes);
+		retVal += "0000:  "+apduString+"              ............\n";
 		retVal += "\n] C-APDU";
 		return retVal;
 	}

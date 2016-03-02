@@ -10,9 +10,9 @@ import org.eclipse.jface.text.ITextHover;
 import org.eclipse.jface.text.ITextViewer;
 import org.eclipse.jface.text.ITypedRegion;
 import org.eclipse.jface.text.Region;
+import org.globaltester.base.util.StringUtil;
 import org.globaltester.logging.logger.GtErrorLogger;
 import org.globaltester.logging.ui.Activator;
-import org.globaltester.util.StringUtil;
 
 public class ApduCommandTextHover implements ITextHover {
 

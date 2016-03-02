@@ -1,6 +1,6 @@
 package org.globaltester.logging.ui.editors;
 
-import org.globaltester.core.ui.editors.FoldingEditor;
+import org.globaltester.base.ui.editors.FoldingEditor;
 
 public class LogfileEditor extends FoldingEditor {
 	

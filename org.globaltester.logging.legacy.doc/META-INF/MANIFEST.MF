@@ -6,5 +6,5 @@ Bundle-Version: 3.0.5.qualifier
 Bundle-Vendor: HJP Consulting GmbH
 Require-Bundle: org.eclipse.help,
  org.eclipse.help.base;bundle-version="3.5.3",
- org.globaltester.core.doc;bundle-version="3.0.0"
+ org.globaltester.base.doc
 

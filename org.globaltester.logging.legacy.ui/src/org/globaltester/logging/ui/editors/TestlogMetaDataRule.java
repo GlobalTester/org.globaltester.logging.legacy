@@ -1,9 +1,9 @@
 package org.globaltester.logging.ui.editors;
 
 import org.eclipse.jface.text.rules.IToken;
-import org.globaltester.core.ui.editors.OrRule;
-import org.globaltester.core.ui.editors.RegexRule;
-import org.globaltester.core.ui.editors.GtScanner.TokenType;
+import org.globaltester.base.ui.editors.OrRule;
+import org.globaltester.base.ui.editors.RegexRule;
+import org.globaltester.base.ui.editors.GtScanner.TokenType;
 
 public class TestlogMetaDataRule extends OrRule {
 

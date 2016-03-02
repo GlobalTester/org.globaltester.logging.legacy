@@ -5,8 +5,8 @@ import org.eclipse.jface.text.IDocumentPartitioner;
 import org.eclipse.jface.text.rules.FastPartitioner;
 import org.eclipse.ui.editors.text.FileDocumentProvider;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
-import org.globaltester.core.ui.editors.GtScanner;
-import org.globaltester.core.ui.editors.GtScanner.TokenType;
+import org.globaltester.base.ui.editors.GtScanner;
+import org.globaltester.base.ui.editors.GtScanner.TokenType;
 
 public class GtLogfileDocumentProvider extends TextFileDocumentProvider {
 

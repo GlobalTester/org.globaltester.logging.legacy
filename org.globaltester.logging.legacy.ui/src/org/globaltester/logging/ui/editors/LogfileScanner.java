@@ -10,7 +10,7 @@ import org.eclipse.jface.text.rules.IPredicateRule;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
-import org.globaltester.core.ui.editors.GtScanner;
+import org.globaltester.base.ui.editors.GtScanner;
 
 /**
  * Scanner that identifies logging related content types

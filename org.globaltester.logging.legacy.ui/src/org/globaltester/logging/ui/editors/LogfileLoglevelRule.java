@@ -4,7 +4,7 @@ import org.eclipse.jface.text.rules.ICharacterScanner;
 import org.eclipse.jface.text.rules.IPredicateRule;
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.WordRule;
-import org.globaltester.core.ui.editors.GtDefaultWordDetector;
+import org.globaltester.base.ui.editors.GtDefaultWordDetector;
 
 /**
  * WordRule that matches all log levels used in GT Logfiles.

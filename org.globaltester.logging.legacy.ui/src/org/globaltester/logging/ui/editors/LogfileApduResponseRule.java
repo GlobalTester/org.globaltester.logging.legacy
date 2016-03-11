@@ -2,7 +2,7 @@ package org.globaltester.logging.ui.editors;
 
 import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.jface.text.rules.MultiLineRule;
-import org.globaltester.core.ui.editors.GtScanner.TokenType;
+import org.globaltester.base.ui.editors.GtScanner.TokenType;
 
 /**
  * MultiLineRule that matches a single APDU in GtLogfile

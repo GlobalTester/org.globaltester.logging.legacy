@@ -11,7 +11,7 @@ import org.eclipse.jface.text.rules.IToken;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Display;
-import org.globaltester.core.ui.editors.GtScanner;
+import org.globaltester.base.ui.editors.GtScanner;
 
 /**
  * Scanner that identifies content types introduced by GlobalTester TestRunner

@@ -15,9 +15,9 @@ import org.eclipse.jface.text.rules.ITokenScanner;
 import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.editors.text.TextSourceViewerConfiguration;
-import org.globaltester.core.ui.editors.GtScanner;
-import org.globaltester.core.ui.editors.GtScanner.TokenType;
-import org.globaltester.core.ui.editors.ReconcilingStrategy;
+import org.globaltester.base.ui.editors.GtScanner;
+import org.globaltester.base.ui.editors.ReconcilingStrategy;
+import org.globaltester.base.ui.editors.GtScanner.TokenType;
 
 //TODO investigate options to remove this SuppresWarnings
 @SuppressWarnings("restriction")

@@ -14,5 +14,4 @@ Require-Bundle: org.eclipse.ui,
  org.globaltester.base
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.globaltester.logging.ui.editors,
- org.globaltester.logging.ui.preferences
+Export-Package: org.globaltester.logging.ui.preferences

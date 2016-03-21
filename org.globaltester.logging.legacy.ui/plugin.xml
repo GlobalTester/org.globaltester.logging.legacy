@@ -10,16 +10,4 @@
     	id="org.globaltester.logging.preferences.GlobalTesterPreferencePageLogging">
     </page>
  </extension>
-<extension
-      point="org.eclipse.ui.editors">
-   <editor
-         class="org.globaltester.logging.ui.editors.LogfileEditor"
-         icon="icons/gtLogfile.png"
-         id="org.globaltester.logging.ui.logFileEditor"
-         name="GT LogfileEditor">
-      <contentTypeBinding
-            contentTypeId="org.globaltester.logging.contenttypes.GtLogfile">
-      </contentTypeBinding>
-   </editor>
-</extension>
 </plugin>

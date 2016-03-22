@@ -23,6 +23,7 @@ import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.globaltester.logging.Activator;
@@ -321,9 +322,9 @@ public class GTLogger {
 		Layout fileLayout;
 		if (prefService.getBoolean(Activator.PLUGIN_ID,
 				PreferenceConstants.P_GT_USEISO8601LOGGING, true, null)) {
-			fileLayout = new GtPatternLayout("%d %-5p - %m%n");
+			fileLayout = new PatternLayout("%d %-5p - %m%n");
 		} else {
-			fileLayout = new GtPatternLayout("%m%n");
+			fileLayout = new PatternLayout("%m%n");
 		}
 
 		// settings for 'plain' logging

@@ -370,7 +370,7 @@ public class SimulatorLogger {
 		htmlFileName = logDir + File.separator + "gt_sim_" + GTLogger.getDefaultTimeString()
 				+ ".html";
 		logFileName = logDir + File.separator + "gt_sim_" + GTLogger.getDefaultTimeString()
-				+ ".log";
+				+ ".gtlog";
 	}
 
 }

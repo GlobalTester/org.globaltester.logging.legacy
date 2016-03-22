@@ -483,7 +483,7 @@ public class TestLogger {
 		// build the filenames
 		logDate = GTLogger.getDefaultTimeString();
 		htmlFileName = logDir + File.separator + "gt_" + logDate + ".html";
-		logFileName = logDir + File.separator + "gt_" + logDate + ".log";
+		logFileName = logDir + File.separator + "gt_" + logDate + ".gtlog";
 	}
 
 	/**
@@ -498,7 +498,7 @@ public class TestLogger {
 					"TestLogger must be initialized to be able to build filenames for TestCaseLogfiles");
 		}
 		return logDir + File.separator + "gt_" + logDate + "_" + testCaseId
-				+ ".log";
+				+ ".gtlog";
 	}
 	
 	public static int getLogFileLine(){

@@ -22,6 +22,7 @@ import org.apache.log4j.FileAppender;
 import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.apache.log4j.PatternLayout;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.globaltester.logging.Activator;
@@ -53,7 +54,7 @@ public class TestLogger {
 	private static String htmlFileName;
 	private static String logFileName;
 	private static String testCaseLogFileName;
-	private static GtPatternLayout fileLayout;
+	private static PatternLayout fileLayout;
 	private static String currentTestExecutable;
 	
 	//line number of log file
@@ -242,9 +243,9 @@ public class TestLogger {
 		// settings for logfiles
 		if (prefService.getBoolean(Activator.PLUGIN_ID,
 				PreferenceConstants.P_TEST_USEISO8601LOGGING, true, null)) {
-			fileLayout = new GtPatternLayout("%d %-5p - %m%n");
+			fileLayout = new PatternLayout("%d %-5p - %m%n");
 		} else {
-			fileLayout = new GtPatternLayout("%m%n");
+			fileLayout = new PatternLayout("%m%n");
 		}
 
 		// settings for 'plain' logging
@@ -482,7 +483,7 @@ public class TestLogger {
 		// build the filenames
 		logDate = GTLogger.getDefaultTimeString();
 		htmlFileName = logDir + File.separator + "gt_" + logDate + ".html";
-		logFileName = logDir + File.separator + "gt_" + logDate + ".log";
+		logFileName = logDir + File.separator + "gt_" + logDate + ".gtlog";
 	}
 
 	/**
@@ -497,7 +498,7 @@ public class TestLogger {
 					"TestLogger must be initialized to be able to build filenames for TestCaseLogfiles");
 		}
 		return logDir + File.separator + "gt_" + logDate + "_" + testCaseId
-				+ ".log";
+				+ ".gtlog";
 	}
 	
 	public static int getLogFileLine(){

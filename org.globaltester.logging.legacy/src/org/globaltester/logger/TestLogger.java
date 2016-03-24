@@ -419,7 +419,7 @@ public class TestLogger {
 		// build the filenames
 		logDate = GTLogger.getIsoDate("yyyyMMdd_HHmmss");
 		htmlFileName = logDir + File.separator + "gt_" + logDate + ".html";
-		logFileName = logDir + File.separator + "gt_" + logDate + ".log";
+		logFileName = logDir + File.separator + "gt_" + logDate + ".gtlog";
 	}
 	
 	/**
@@ -431,7 +431,7 @@ public class TestLogger {
 		if (!isInitialized()){
 			throw new RuntimeException("TestLogger must be initialized to be able to build filenames for TestCaseLogfiles");
 		}
-		return logDir + File.separator + "gt_" + logDate + "_" + testCaseId + ".log";
+		return logDir + File.separator + "gt_" + logDate + "_" + testCaseId + ".gtlog";
 	}
 
 	public static String getLogDir() {

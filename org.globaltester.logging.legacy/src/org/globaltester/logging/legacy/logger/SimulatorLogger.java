@@ -1,4 +1,4 @@
-package org.globaltester.logging.logger;
+package org.globaltester.logging.legacy.logger;
 
 /*
  * Project GlobalTester File GTLogger.java
@@ -24,8 +24,8 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
-import org.globaltester.logging.Activator;
-import org.globaltester.logging.preferences.PreferenceConstants;
+import org.globaltester.logging.legacy.Activator;
+import org.globaltester.logging.legacy.preferences.PreferenceConstants;
 
 /**
  * This class implements methods for logging of messages regarding GT Simulator

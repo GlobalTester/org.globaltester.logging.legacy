@@ -23,8 +23,8 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.globaltester.logging.Activator;
-import org.globaltester.logging.preferences.PreferenceConstants;
+import org.globaltester.logging.legacy.Activator;
+import org.globaltester.logging.legacy.preferences.PreferenceConstants;
 
 /**
  * This class implements methods for logging of messages regarding GT Simulator

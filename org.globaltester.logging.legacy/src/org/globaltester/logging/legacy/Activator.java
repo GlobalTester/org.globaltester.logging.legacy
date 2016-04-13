@@ -1,4 +1,4 @@
-package org.globaltester.logging;
+package org.globaltester.logging.legacy;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

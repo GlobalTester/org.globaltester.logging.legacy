@@ -15,9 +15,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-import org.globaltester.logging.Activator;
-import org.globaltester.logging.logger.GTLogger;
-import org.globaltester.logging.preferences.PreferenceConstants;
+import org.globaltester.logging.legacy.Activator;
+import org.globaltester.logging.legacy.logger.GTLogger;
+import org.globaltester.logging.legacy.preferences.PreferenceConstants;
 
 /**
  * This class stores the properties of the plugin

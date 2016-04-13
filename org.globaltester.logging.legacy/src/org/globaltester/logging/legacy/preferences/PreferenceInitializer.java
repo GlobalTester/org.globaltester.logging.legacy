@@ -13,12 +13,12 @@
  * Non-Disclosure Agreement you entered into with HJP.
  */
 
-package org.globaltester.logging.preferences;
+package org.globaltester.logging.legacy.preferences;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.globaltester.logging.Activator;
+import org.globaltester.logging.legacy.Activator;
 
 /**
  * This class stores the properties of the plugin Class used to initialize

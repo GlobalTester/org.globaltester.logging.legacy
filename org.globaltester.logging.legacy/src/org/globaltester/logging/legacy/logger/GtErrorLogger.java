@@ -1,4 +1,4 @@
-package org.globaltester.logging.logger;
+package org.globaltester.logging.legacy.logger;
 
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;

@@ -10,7 +10,7 @@
  * Non-Disclosure Agreement you entered into with HJP.
  */
 
-package org.globaltester.logging.preferences;
+package org.globaltester.logging.legacy.preferences;
 
 /**
  * This class stores the properties of the plugin Constant definitions for

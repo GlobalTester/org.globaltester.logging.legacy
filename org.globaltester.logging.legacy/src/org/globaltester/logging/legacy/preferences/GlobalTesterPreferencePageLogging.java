@@ -1,4 +1,4 @@
-package org.globaltester.logging.preferences;
+package org.globaltester.logging.legacy.preferences;
 
 /*
  * Project GlobalTester-Plugin File GTPreferencesPageLogging.java
@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.globaltester.logger.GTLogger;
-import org.globaltester.logging.Activator;
+import org.globaltester.logging.legacy.Activator;
 import org.globaltester.preferences.ValidateDirectoryFieldEditor;
 
 /**

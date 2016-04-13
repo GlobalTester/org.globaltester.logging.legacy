@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: GT Logging Legacy
 Bundle-SymbolicName: org.globaltester.logging.legacy;singleton:=true
 Bundle-Version: 3.0.5.qualifier
-Bundle-Activator: org.globaltester.logging.Activator
+Bundle-Activator: org.globaltester.logging.legacy.Activator
 Bundle-Vendor: HJP Consulting GmbH
 Require-Bundle: org.globaltester.base,
  org.eclipse.ui.workbench,
@@ -18,7 +18,7 @@ Bundle-ClassPath: lib/log4j-1.2.14.jar,
 Export-Package: org.apache.log4j,
  org.apache.log4j.varia,
  org.globaltester.logger,
- org.globaltester.logging,
- org.globaltester.logging.logger,
- org.globaltester.logging.preferences
+ org.globaltester.logging.legacy,
+ org.globaltester.logging.legacy.logger,
+ org.globaltester.logging.legacy.preferences
 Import-Package: org.osgi.framework;version="1.8.0"

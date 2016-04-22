@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.globaltester.logging.legacy.Activator;
+import org.globaltester.logging.legacy.logger.TestLogger;
 import org.globaltester.logging.legacy.preferences.PreferenceConstants;
 
 /**

@@ -17,7 +17,6 @@ Bundle-ClassPath: lib/log4j-1.2.14.jar,
  .
 Export-Package: org.apache.log4j,
  org.apache.log4j.varia,
- org.globaltester.logger,
  org.globaltester.logging.legacy,
  org.globaltester.logging.legacy.logger,
  org.globaltester.logging.legacy.preferences

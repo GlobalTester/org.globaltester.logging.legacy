@@ -201,10 +201,17 @@ public class GTLogger {
 	 * Sets the logging level according to preferences
 	 */
 	public void setLevel() {
-		String level = PreferenceConstants.LOGLEVELS[Platform.getPreferencesService().getInt(
-				Activator.PLUGIN_ID, PreferenceConstants.P_GT_LOGLEVEL, 0,
-				null)];
+		String level;
+		IPreferencesService prefService = Platform.getPreferencesService();
+		if(prefService != null) {
+			level = PreferenceConstants.LOGLEVELS[prefService.getInt(
+					Activator.PLUGIN_ID, PreferenceConstants.P_GT_LOGLEVEL, 0,
+					null)];
+		} else {
+			level = PreferenceConstants.LOGLEVELS[PreferenceConstants.LOGLEVEL_TRACE];
+		}
 		logger.setLevel(Level.toLevel(level));
+		
 	}
 
 	/**
@@ -257,6 +264,7 @@ public class GTLogger {
 	 */
 	private void setFileNames() {
 		//set default logdir in workspace metadata
+		
 		logDir = Platform.getLocation().append(".metadata").toString();
 		
 		String oldHtmlFileName = htmlFileName;
@@ -316,41 +324,42 @@ public class GTLogger {
 		setLevel();
 
 		//configure filenames according to preferences
-		setFileNames();
+		if(prefService != null) {
+			setFileNames();
+		}
 
 		// setting logfile layout		
 		Layout fileLayout;
-		if (prefService.getBoolean(Activator.PLUGIN_ID,
-				PreferenceConstants.P_GT_USEISO8601LOGGING, true, null)) {
+		if (getBooleanPreference(PreferenceConstants.P_GT_USEISO8601LOGGING, true)) {
 			fileLayout = new PatternLayout("%d %-5p - %m%n");
 		} else {
 			fileLayout = new PatternLayout("%m%n");
 		}
 
 		// settings for 'plain' logging
-		if (prefService.getBoolean(Activator.PLUGIN_ID,
-				PreferenceConstants.P_GT_PLAINLOGGING, true, null)) {
-			if (fileAppenderPlain == null) {
-				try {
-					fileAppenderPlain = new FileAppender(fileLayout,
-							logFileName);
-					fileAppenderPlain.setName(APPENDER_PLAIN);
-					logger.addAppender(fileAppenderPlain);
-				} catch (IOException e) {
-					e.printStackTrace();
+		if(prefService != null) {
+			if (getBooleanPreference(PreferenceConstants.P_GT_PLAINLOGGING, true)) {
+				if (fileAppenderPlain == null) {
+					try {
+						fileAppenderPlain = new FileAppender(fileLayout,
+								logFileName);
+						fileAppenderPlain.setName(APPENDER_PLAIN);
+						logger.addAppender(fileAppenderPlain);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					fileAppenderPlain.setLayout(fileLayout);
+					fileAppenderPlain.setFile(logFileName);
 				}
 			} else {
-				fileAppenderPlain.setLayout(fileLayout);
-				fileAppenderPlain.setFile(logFileName);
+				logFileName = "";
+				logger.removeAppender(APPENDER_PLAIN);
 			}
-		} else {
-			logFileName = "";
-			logger.removeAppender(APPENDER_PLAIN);
 		}
 
 		// settings for 'console' logging
-		if (prefService.getBoolean(Activator.PLUGIN_ID,
-				PreferenceConstants.P_GT_CONSOLELOGGING, true, null)) {
+		if (getBooleanPreference(PreferenceConstants.P_GT_CONSOLELOGGING, true)) {
 			if (consoleAppender == null) {
 				consoleAppender = new ConsoleAppender(fileLayout);
 				consoleAppender.setName(APPENDER_CONSOLE);
@@ -362,8 +371,7 @@ public class GTLogger {
 		}
 
 		//settings for html file
-		if (prefService.getBoolean(Activator.PLUGIN_ID,
-				PreferenceConstants.P_GT_HTMLLOGGING, false, null)) {
+		if (getBooleanPreference(PreferenceConstants.P_GT_HTMLLOGGING, false)) {
 			if (fileAppenderHtml == null) {
 				HTMLLayout htmlLayout = new HTMLLayout();
 				htmlLayout.setTitle(htmlFileName);
@@ -383,6 +391,23 @@ public class GTLogger {
 		}
 
 	}
+	
+	/**
+	 * Get value of a boolean preference and return default if pref service does not exist
+	 * @param preferenceKey the name of the preference
+	 * @param defaultValue the value to use if the preference is not defined or the pref service does not exist
+	 * @return
+	 */
+	private boolean getBooleanPreference(String preferenceKey, boolean defaultValue) {
+		IPreferencesService prefService = Platform.getPreferencesService();
+		if(prefService != null) {
+			return prefService.getBoolean(Activator.PLUGIN_ID,
+					preferenceKey, defaultValue, null);
+		} else {
+			return defaultValue;
+		}
+	}
+	
 
 	public String getLogDir() {
 		return logDir;

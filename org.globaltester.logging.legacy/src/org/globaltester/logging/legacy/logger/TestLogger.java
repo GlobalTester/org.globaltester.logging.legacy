@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.globaltester.logging.legacy.Activator;
 import org.globaltester.logging.legacy.preferences.PreferenceConstants;
 
@@ -514,6 +515,56 @@ public class TestLogger {
 		}
 		
 		return logFileLine;
+	}
+	
+	public static String getLogDir() {
+		return logDir;
+	}
+	
+	/**
+	 * Initialize the TestLogger for a new TestCase
+	 * 
+	 * @param testCaseId
+	 *            will be used as part of the logfile name of the current
+	 *            testcase
+	 */
+	public static void initTestCase(String testCaseId) {
+		if (!isInitialized()) {
+			throw new RuntimeException(
+					"TestLogger must be initialized before initializing for a testcase");
+		}
+		
+		shutdownTestCaseLogger();
+		
+		//do not setup the logfile if single logging is disabled in the preferences
+		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+		if (!store.getBoolean(PreferenceConstants.P_TEST_LOG_SINGLE_TESTCASES)) {
+			testCaseLogFileName = "";
+			return;
+		} 
+
+		testCaseLogFileName = getTestCaseLogFileName(testCaseId);
+		
+		// create new Appender for current TestCase and add it to logger
+		try {
+			testCaseAppender = new FileAppender(fileLayout, testCaseLogFileName);
+			testCaseAppender
+					.setName(APPENDER_TESTCASE + "(" + testCaseId + ")");
+			logger.addAppender(testCaseAppender);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Dispose the TestCaseLogger, following log messages will go only to the
+	 * session log until the next call to initTestCase()
+	 */
+	public static void shutdownTestCaseLogger() {
+		if (isTestCaseInitialized()) {
+			logger.removeAppender(testCaseAppender);
+		}
+		testCaseAppender = null;
 	}
 
 }

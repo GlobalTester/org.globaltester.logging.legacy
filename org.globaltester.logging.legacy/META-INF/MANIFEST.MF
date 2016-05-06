@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: GT Logging Legacy
 Bundle-SymbolicName: org.globaltester.logging.legacy;singleton:=true
-Bundle-Version: 3.0.5.qualifier
+Bundle-Version: 3.1.0.qualifier
 Bundle-Activator: org.globaltester.logging.legacy.Activator
 Bundle-Vendor: HJP Consulting GmbH
 Require-Bundle: org.globaltester.base,

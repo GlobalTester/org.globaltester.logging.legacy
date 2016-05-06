@@ -1,5 +1,46 @@
-Version 3.0.5 (29.02.2016)
+Version 3.1.0 (06.05.2016)
 
+* Merge branch 'usr/jkoch/fixLogging'
+* Fix GTLogger for running from junit tests
+* Remove org.globaltester.logging after unification
+* Unify GTLogger
+* Unified GTErrorLogger
+* Unified Simulator Logger
+* Merge TestLogger classes
+* Resolves name clash of legacy logging packages
+* Merge remote-tracking branch 'origin/usr/mboonk/qaSprint15'
+* Set all build relevant settings to Java 1.8
+* Merge branch 'usr/cstroh/opensourcingPlatform'
+* Add LICENSE and NOTICE to build.properties
+* Add LICENSE and NOTICE files for our code
+* Add LICENSE and NOTICE files to gitattributes
+* Add README.md to repository
+* Merge remote-tracking branch 'origin/usr/cstroh/logFileEditor'
+* Merge branch 'usr/cstroh/fixVersions'
+* Change .log to .gtlog
+* Remove content describer for logfiles and refer all *.log instead
+* Move o.g.logging.legacy.ui to o.g.logging.ui
+* Remove wrong version from required bundle
+* Merge remote-tracking branch 'origin/usr/cstroh/gtProducts'
+* Add html and toc to build.properties to build help section
+* Add related doc-bundle as optional dependency
+* Merge branch 'usr/jkoch/mergeCoreBase'
+* adapt changes due to the refactoring of core.ui to base.ui
+* adapt imports (core->base)
+* Merge branch 'usr/amay/releaseBuild'
+* Update version numbers in POM
+* Merge remote-tracking branch 'origin/usr/cstroh/removeDependency'
+* Remove anmespaces from POMs
+* Remove og.smartcardshell from dependencies of o.g.logging.legacy.ui.test
+* Update version numbers
+* Merge remote-tracking branch 'origin/usr/mboonk/fixFileEndings'
+* update parent pom version
+* Updated the changelog
+* Added missing line endings at the end of text files
+* Merge remote-tracking branch 'origin/usr/cstroh/fixGitAttributes'
+* Replace gitattributes by file from o.g.dev
+* Fixed line endings
+* Merge branch 'usr/cstroh/preferenceTrees'
 * Move GT3 logging preference page to correct preference tree
 * Code maintenance
 

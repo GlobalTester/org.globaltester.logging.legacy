@@ -1,17 +1,5 @@
 package org.globaltester.logging.legacy.logger;
 
-/*
- * Project GlobalTester File GTLogger.java
- * 
- * Developed by HJP Consulting GmbH Hauptstr. 35 33178 Borchen Germany
- * 
- * 
- * This software is the confidential and proprietary information of HJP
- * ("Confidential Information"). You shall not disclose such Confidential
- * Information and shall use it only in accordance with the terms of the
- * Non-Disclosure Agreement you entered into with HJP.
- */
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;

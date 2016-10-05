@@ -1,20 +1,5 @@
 package org.globaltester.logging.legacy.preferences;
 
-/*
- * Project GlobalTester-Plugin File GTPreferencesPageLogging.java
- * 
- * Date 03.07.2006
- * 
- * 
- * Developed by HJP Consulting GmbH Lanfert 24 33106 Paderborn Germany
- * 
- * 
- * This software is the confidential and proprietary information of HJP
- * ("Confidential Information"). You shall not disclose such Confidential
- * Information and shall use it only in accordance with the terms of the
- * Non-Disclosure Agreement you entered into with HJP.
- */
-
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;

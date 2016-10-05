@@ -1,15 +1,3 @@
-/*
- * Project GlobalTester-Plugin
- * 
- * Developed by HJP Consulting GmbH Hauptstr. 35 33106 Paderborn Germany
- * 
- * 
- * This software is the confidential and proprietary information of HJP
- * ("Confidential Information"). You shall not disclose such Confidential
- * Information and shall use it only in accordance with the terms of the
- * Non-Disclosure Agreement you entered into with HJP.
- */
-
 package org.globaltester.logging.legacy.preferences;
 
 /**

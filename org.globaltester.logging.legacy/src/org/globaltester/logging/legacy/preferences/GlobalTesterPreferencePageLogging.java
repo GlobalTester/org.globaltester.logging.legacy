@@ -2,6 +2,7 @@ package org.globaltester.logging.legacy.preferences;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -15,10 +16,8 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
 import org.globaltester.logging.legacy.Activator;
 import org.globaltester.logging.legacy.logger.GTLogger;
-import org.globaltester.preferences.ValidateDirectoryFieldEditor;
 
 /**
  * This class stores the properties of the plugin
@@ -35,7 +34,7 @@ public class GlobalTesterPreferencePageLogging extends
 	Group frameworkOptionsGroup;
 	BooleanFieldEditor bfeFrameworkManualSettings;
 	private Composite compFrameworkDirEditor;
-	ValidateDirectoryFieldEditor dfeFrameworkLoggingDir;
+	DirectoryFieldEditor dfeFrameworkLoggingDir;
 	
 	BooleanFieldEditor bfeFrameworkPlainLogging;
 	BooleanFieldEditor bfeFrameworkISO8601Logging;
@@ -48,7 +47,7 @@ public class GlobalTesterPreferencePageLogging extends
 	Group testOptionsGroup;
 	BooleanFieldEditor bfeTestManualSettings;
 	private Composite compTestDirEditor;
-	ValidateDirectoryFieldEditor dfeTestLoggingDir;
+	DirectoryFieldEditor dfeTestLoggingDir;
 	BooleanFieldEditor bfeTestPersistentMarker;
 	BooleanFieldEditor bfeTestHtmlLogger;
 	BooleanFieldEditor bfeTestPlainLogger;
@@ -63,7 +62,7 @@ public class GlobalTesterPreferencePageLogging extends
 	Group simOptionsGroup;
 	BooleanFieldEditor bfeUseSimLogs;
 	private Composite compSimDirEditor;
-	ValidateDirectoryFieldEditor dfeSimLoggingDir;
+	DirectoryFieldEditor dfeSimLoggingDir;
 	BooleanFieldEditor bfeSimHtmlLogger;
 	BooleanFieldEditor bfeSimPlainLogger;
 	BooleanFieldEditor bfeSimISO8601Logging;
@@ -162,7 +161,7 @@ public class GlobalTesterPreferencePageLogging extends
 		gd_compFrameworkDirEditor.grabExcessHorizontalSpace = true;
 		compFrameworkDirEditor.setLayoutData(gd_compFrameworkDirEditor);
 		
-		dfeFrameworkLoggingDir = new ValidateDirectoryFieldEditor(
+		dfeFrameworkLoggingDir = new DirectoryFieldEditor(
 				PreferenceConstants.P_GT_LOGGINGDIR,
 				"&Framework logging directory:", compFrameworkDirEditor);
 		dfeFrameworkLoggingDir.setEmptyStringAllowed(false);
@@ -242,7 +241,7 @@ public class GlobalTesterPreferencePageLogging extends
 		gd_compTestDirEditor.grabExcessHorizontalSpace = true;
 		compTestDirEditor.setLayoutData(gd_compTestDirEditor);
 		
-		dfeTestLoggingDir = new ValidateDirectoryFieldEditor(
+		dfeTestLoggingDir = new DirectoryFieldEditor(
 				PreferenceConstants.P_TEST_LOGGINGDIR,
 				"&Test logging directory:", compTestDirEditor);
 		dfeTestLoggingDir.setEmptyStringAllowed(false);
@@ -331,7 +330,7 @@ public class GlobalTesterPreferencePageLogging extends
 			gd_compSimDirEditor.grabExcessHorizontalSpace = true;
 			compSimDirEditor.setLayoutData(gd_compSimDirEditor);
 			
-			dfeSimLoggingDir = new ValidateDirectoryFieldEditor(
+			dfeSimLoggingDir = new DirectoryFieldEditor(
 					PreferenceConstants.P_GT_SIM_LOGGINGDIR,
 					"&Simulator logging directory:", compSimDirEditor);
 			dfeSimLoggingDir.setEmptyStringAllowed(false);

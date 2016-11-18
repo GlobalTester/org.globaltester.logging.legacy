@@ -308,7 +308,7 @@ public class GlobalTesterPreferencePageLogging extends
 				true, false));
 		
 		//preferences for logging of GT Simulator
-		if (Platform.getBundle("com.hjp.globaltester.simulator")!= null) {
+		if (Platform.getBundle("com.secunet.globaltester.simulator.legacy")!= null) {
 			simOptionsGroup = new Group(container, SWT.NONE);
 			simOptionsGroup.setText("Logging of GT Simulator runs");
 			GridData gd4 = new GridData(GridData.FILL, GridData.FILL, true, false);

@@ -5,17 +5,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.FileAppender;
-import org.apache.log4j.HTMLLayout;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.globaltester.logging.BasicLogger;
 import org.globaltester.logging.legacy.Activator;
 import org.globaltester.logging.legacy.preferences.PreferenceConstants;
+import org.globaltester.logging.tags.LogLevel;
 
 /**
  * This class implements methods for logging of messages regarding TestExecution
@@ -26,13 +24,9 @@ import org.globaltester.logging.legacy.preferences.PreferenceConstants;
 
 public class TestLogger {
 
-	private static final String APPENDER_PLAIN = "TestLogger_Plain_Appender";
-	private static final String APPENDER_HTML = "TestLogger_HTML_Appender";
 	private static final String APPENDER_TESTCASE = "TestLogger_TestCase_Appender";
 	public static final String DEFAULTFORMAT = "%-66s -";
 
-	// Logger
-	private static Logger logger = null;
 
 	// Appender for single log files per test case
 	private static FileAppender testCaseAppender = null;
@@ -40,7 +34,6 @@ public class TestLogger {
 	// where to log
 	private static String logDir;
 	private static String logDate;
-	private static String htmlFileName;
 	private static String logFileName;
 	private static String testCaseLogFileName;
 	private static PatternLayout fileLayout;
@@ -50,8 +43,11 @@ public class TestLogger {
 	private static int logFileLine;
 	private static LineNumberReader lnr;
 
+	private static boolean initialized;
+	private static LogLevel level;
+	
 	public static boolean isInitialized() {
-		return logger != null;
+		return initialized;
 	}
 
 	public static boolean isTestCaseInitialized() {
@@ -75,7 +71,7 @@ public class TestLogger {
 	public static void debug(String logString) {
 		GTLogger.getInstance().debug(logString);
 		if (isInitialized()) {
-			logger.debug(logString);
+			BasicLogger.log(logString, LogLevel.DEBUG);
 		}
 	}
 
@@ -92,10 +88,7 @@ public class TestLogger {
 			}
 			lnr = null;
 		}
-		if (isInitialized()) {
-			logger.removeAllAppenders();
-		}
-		logger = null;
+		initialized = false;;
 	}
 
 	/**
@@ -109,7 +102,6 @@ public class TestLogger {
 			TestLogger.info(String.format(format, currentTestExecutable));
 			TestLogger.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -");
 			testCaseAppender.close();
-			logger.removeAppender(testCaseAppender);
 		}
 		testCaseAppender = null;
 	}
@@ -131,7 +123,7 @@ public class TestLogger {
 	public static void error(String logString) {
 		GTLogger.getInstance().error(logString);
 		if (isInitialized()) {
-			logger.error(logString);
+			BasicLogger.log(logString, LogLevel.ERROR);
 		}
 	}
 
@@ -152,30 +144,8 @@ public class TestLogger {
 	public static void fatal(String logString) {
 		GTLogger.getInstance().fatal(logString);
 		if (isInitialized()) {
-			logger.fatal(logString);
+			BasicLogger.log(logString, LogLevel.FATAL);
 		}
-	}
-
-	/**
-	 * Getter for logger level
-	 * 
-	 * @return level of logging
-	 */
-	public static String getLevel() {
-		if (logger.getLevel() == Level.TRACE) {
-			return "TRACE";
-		} else if (logger.getLevel() == Level.DEBUG) {
-			return "DEBUG";
-		} else if (logger.getLevel() == Level.INFO) {
-			return "INFO";
-		} else if (logger.getLevel() == Level.WARN) {
-			return "WARN";
-		} else if (logger.getLevel() == Level.ERROR) {
-			return "ERROR";
-		} else if (logger.getLevel() == Level.FATAL) {
-			return "FATAL";
-		}
-		return null;
 	}
 
 	/**
@@ -195,7 +165,7 @@ public class TestLogger {
 	public static void info(String logString) {
 		GTLogger.getInstance().info(logString);
 		if (isInitialized()) {
-			logger.info(logString);
+			BasicLogger.log(logString, LogLevel.INFO);
 		}
 	}
 
@@ -203,7 +173,7 @@ public class TestLogger {
 	 * Initialize a the TestLogger for a new Test
 	 */
 	public static void init() {
-		if (logger != null) {
+		if (initialized) {
 			GTLogger.getInstance().error(
 					"Only one TestLogger is allowed to be active at a time!");
 			throw new RuntimeException(
@@ -211,24 +181,19 @@ public class TestLogger {
 		}
 
 		IPreferencesService prefService = Platform.getPreferencesService();
-
-		// get the Logger from log4j
-		BasicConfigurator.configure();
-		logger = Logger.getLogger("TestLogger");
-
-		// clean the logger (just to be sure)
-		logger.removeAllAppenders();
-		Logger.getRootLogger().removeAllAppenders();
-
+		
 		// set the loglevel
-		String level = PreferenceConstants.LOGLEVELS[prefService.getInt(
+		level = LogLevel.valueOf(PreferenceConstants.LOGLEVELS[prefService.getInt(
 				Activator.PLUGIN_ID, PreferenceConstants.P_TEST_LOGLEVEL, 0,
-				null)];
-		logger.setLevel(Level.toLevel(level));
+				null)]);
+		
+		//FIXME configure the filelogger level 
 
 		// configure filenames according to preferences
 		setFileNames();
 
+		
+		//FIXME configure log format for file logger
 		// settings for logfiles
 		if (prefService.getBoolean(Activator.PLUGIN_ID,
 				PreferenceConstants.P_TEST_USEISO8601LOGGING, true, null)) {
@@ -237,38 +202,7 @@ public class TestLogger {
 			fileLayout = new PatternLayout("%m%n");
 		}
 
-		// settings for 'plain' logging
-		if (prefService.getBoolean(Activator.PLUGIN_ID,
-				PreferenceConstants.P_TEST_PLAINLOGGING, true, null)) {
-			try {
-				FileAppender fileAppenderPlain = new FileAppender(fileLayout,
-						logFileName);
-				fileAppenderPlain.setName(APPENDER_PLAIN);
-				logger.addAppender(fileAppenderPlain);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} else {
-			logFileName = "";
-		}
-
-		// settings for html file
-		if (prefService.getBoolean(Activator.PLUGIN_ID,
-				PreferenceConstants.P_TEST_HTMLLOGGING, false, null)) {
-			HTMLLayout htmlLayout = new HTMLLayout();
-			htmlLayout.setTitle(htmlFileName);
-			try {
-				FileAppender fileAppenderHtml = new FileAppender(htmlLayout,
-						htmlFileName);
-				fileAppenderHtml.setName(APPENDER_HTML);
-				logger.addAppender(fileAppenderHtml);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		} else {
-			htmlFileName = "";
-		}
+		//FIXME configure file logger file name
 		
 		try {
 			if (lnr != null) {
@@ -290,37 +224,8 @@ public class TestLogger {
 			return;
 		}
 
-		String level = PreferenceConstants.LOGLEVELS[Platform.getPreferencesService().getInt(
-				Activator.PLUGIN_ID, PreferenceConstants.P_TEST_LOGLEVEL, 0,
-				null)];
-		logger.setLevel(Level.toLevel(level));
-	}
-
-	/**
-	 * Setter for Level of log4J
-	 * 
-	 * @param level
-	 *            of logging
-	 */
-	public static void setLevel(String level) {
-
-		if (!isInitialized()) {
-			return;
-		}
-
-		if (level.equals("TRACE")) {
-			logger.setLevel(Level.TRACE);
-		} else if (level.equals("DEBUG")) {
-			logger.setLevel(Level.DEBUG);
-		} else if (level.equals("INFO")) {
-			logger.setLevel(Level.INFO);
-		} else if (level.equals("WARN")) {
-			logger.setLevel(Level.WARN);
-		} else if (level.equals("ERROR")) {
-			logger.setLevel(Level.ERROR);
-		} else if (level.equals("FATAL")) {
-			logger.setLevel(Level.FATAL);
-		}
+		level = LogLevel.valueOf(PreferenceConstants.LOGLEVELS[Platform.getPreferencesService().getInt(Activator.PLUGIN_ID, PreferenceConstants.P_TEST_LOGLEVEL, 0,
+				null)]);
 	}
 
 	/**
@@ -340,7 +245,7 @@ public class TestLogger {
 	public static void trace(String logString) {
 		GTLogger.getInstance().trace(logString);
 		if (isInitialized()) {
-			logger.trace(logString);
+			BasicLogger.log(logString, LogLevel.TRACE);
 		}
 	}
 
@@ -361,7 +266,7 @@ public class TestLogger {
 	public static void warn(String logString) {
 		GTLogger.getInstance().warn(logString);
 		if (isInitialized()) {
-			logger.warn(logString);
+			BasicLogger.log(logString, LogLevel.WARN);
 		}
 	}
 
@@ -435,7 +340,6 @@ public class TestLogger {
 			testCaseAppender = new FileAppender(fileLayout, testCaseLogFileName);
 			testCaseAppender
 					.setName(APPENDER_TESTCASE + "(" + executableId + ")");
-			logger.addAppender(testCaseAppender);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -471,7 +375,6 @@ public class TestLogger {
 
 		// build the filenames
 		logDate = GTLogger.getDefaultTimeString();
-		htmlFileName = logDir + File.separator + "gt_" + logDate + ".html";
 		logFileName = logDir + File.separator + "gt_" + logDate + ".gtlog";
 	}
 
@@ -534,7 +437,6 @@ public class TestLogger {
 			testCaseAppender = new FileAppender(fileLayout, testCaseLogFileName);
 			testCaseAppender
 					.setName(APPENDER_TESTCASE + "(" + testCaseId + ")");
-			logger.addAppender(testCaseAppender);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -545,9 +447,6 @@ public class TestLogger {
 	 * session log until the next call to initTestCase()
 	 */
 	public static void shutdownTestCaseLogger() {
-		if (isTestCaseInitialized()) {
-			logger.removeAppender(testCaseAppender);
-		}
 		testCaseAppender = null;
 	}
 

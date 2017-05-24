@@ -5,26 +5,22 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.globaltester.logging.BasicLogger;
 import org.globaltester.logging.LogListenerConfig;
-import org.globaltester.logging.Message;
-import org.globaltester.logging.MessageCoderJson;
 import org.globaltester.logging.filelogger.FileLogger;
 import org.globaltester.logging.filelogger.OsgiLogger;
 import org.globaltester.logging.filter.AndFilter;
 import org.globaltester.logging.filter.LogFilter;
 import org.globaltester.logging.filter.TagFilter;
 import org.globaltester.logging.filter.TagFilter.Mode;
+import org.globaltester.logging.format.GtFileLogFormatter;
 import org.globaltester.logging.format.LogFormatService;
 import org.globaltester.logging.legacy.Activator;
 import org.globaltester.logging.legacy.preferences.PreferenceConstants;
 import org.globaltester.logging.tags.LogLevel;
-import org.osgi.service.log.LogEntry;
 
 /**
  * This class manages all context needed for logging of a specific test run.
@@ -35,9 +31,6 @@ import org.osgi.service.log.LogEntry;
  */
 
 public class TestLoggerContext {
-
-	private static final DateFormat DATE_FORMAT_GT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss,SSS");
-	private static final DateFormat DATE_FORMAT_ISO = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
 	// where to log
 	private String logDir;
@@ -101,9 +94,9 @@ public class TestLoggerContext {
 		// settings for logfiles
 		if (prefService.getBoolean(Activator.PLUGIN_ID,
 				PreferenceConstants.P_TEST_USEISO8601LOGGING, true, null)) {
-			dateFormat = DATE_FORMAT_ISO;
+			dateFormat = GtFileLogFormatter.DATE_FORMAT_ISO;
 		} else {
-			dateFormat= DATE_FORMAT_GT;
+			dateFormat= GtFileLogFormatter.DATE_FORMAT_GT;
 		}
 			
 		FileLogger logger;
@@ -240,37 +233,21 @@ public class TestLoggerContext {
 	}
 
 	private LogListenerConfig getConfig(DateFormat dateFormat, LogLevel maxLevel){
-		LogFilter presetFilter = new AndFilter(
+		LogFilter filter = new AndFilter(
 				new TagFilter(BasicLogger.LOG_LEVEL_TAG_ID, Mode.AT_LEAST_ONE, LogLevel.getUpToAsNames(level)),
 				new TagFilter(BasicLogger.ORIGIN_THREAD_GROUP_TAG_ID, Thread.currentThread().getThreadGroup().getName()));
+		LogFormatService formatter = new GtFileLogFormatter(dateFormat);
 		
 		return new LogListenerConfig() {
 			
 			@Override
 			public LogFormatService getFormat() {
-				return new LogFormatService() {
-					
-					@Override
-					public String format(LogEntry entry) {
-						String date = dateFormat.format(new Date(entry.getTime())) + " - ";
-						Message message = MessageCoderJson.decode(entry.getMessage());
-						if (message != null){
-							// extracts log level and message from the encoded message
-							return date + String.format("%-5s", message.getLogTags().stream()
-											.filter(p -> p.getId().equals(BasicLogger.LOG_LEVEL_TAG_ID)).findFirst().get()
-											.getAdditionalData()[0])
-									+ " - " + message.getMessageContent();	
-						} else {
-							return date + String.format("%-5s", BasicLogger.convertOsgiToLogLevel(entry.getLevel()).name()) + " - " + entry.getMessage();
-						}
-						
-					}
-				};
+				return formatter;
 			}
 			
 			@Override
 			public LogFilter getFilter() {
-				return presetFilter;
+				return filter;
 			}
 		};
 	}

@@ -38,7 +38,6 @@ public class GTLogger {
 	//where to log
 	private String logDir;
 	private String logFileName;
-	private String htmlFileName;
 
 	// Logger
 	private Logger logger;
@@ -252,7 +251,6 @@ public class GTLogger {
 		
 		logDir = Platform.getLocation().append(".metadata").toString();
 		
-		String oldHtmlFileName = htmlFileName;
 		String oldLogFileName = logFileName;
 		
 		//get the logDir from preference service if manual settings are selected
@@ -264,17 +262,9 @@ public class GTLogger {
 					PreferenceConstants.P_GT_LOGGINGDIR, logDir, null);
 		}
 
-		//build the filenames
-		htmlFileName = logDir + File.separator + "gt_log.html";
 		logFileName = logDir + File.separator + "globaltester.gtlog";
 
 		//remove existing files
-		File htmlLogFile = new File(htmlFileName);
-		if (!htmlFileName.equals(oldHtmlFileName) && htmlLogFile.exists()) {
-			if (!htmlLogFile.delete()){
-				debug("HTML log file "+htmlFileName+" could not be deleted, logging will try to append to it");
-			}
-		}
 		File logFile = new File(logFileName);
 		if (!logFileName.equals(oldLogFileName) && logFile.exists()) {
 			if (!logFile.delete()){
@@ -316,9 +306,9 @@ public class GTLogger {
 		// setting logfile layout		
 		Layout fileLayout;
 		if (getBooleanPreference(PreferenceConstants.P_GT_USEISO8601LOGGING, true)) {
-			fileLayout = new PatternLayout("%d %-5p - %m%n");
+			fileLayout = new PatternLayout("%d{yyyy-MM-ss'T'HH:mm:ss} - %-5p - %m%n");
 		} else {
-			fileLayout = new PatternLayout("%d{dd MMM yyyy HH:mm:ss,SSS} - %-5p -%m%n");
+			fileLayout = new PatternLayout("%d{yyyy-MM-ss HH:mm:ss,SSS} - %-5p -%m%n");
 		}
 
 		// settings for 'plain' logging

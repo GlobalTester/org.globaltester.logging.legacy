@@ -10,7 +10,9 @@ import org.globaltester.logging.tags.LogLevel;
  * This class implements methods for logging of messages regarding
  * TestExecution. This class heavily depends on {@link ThreadGroup}s beeing used
  * as a container for test execution code. It uses {@link ThreadGroup} objects
- * and names for distinguishing and filtering of log messages.
+ * and names for distinguishing and filtering of log messages. Access to this
+ * classes logging methods should be replaced by equivalent calls to
+ * {@link BasicLogger}.
  * 
  * @author amay
  * 

@@ -27,8 +27,8 @@ import org.globaltester.logging.tags.LogLevel;
 import org.osgi.service.log.LogEntry;
 
 /**
- * This class implements methods for logging of messages regarding
- * TestExecution.
+ * This class manages all context needed for logging of a specific test run.
+ * This includes configuration and formats of the logging to files.
  * 
  * @author mboonk
  * 
@@ -53,7 +53,7 @@ public class TestLoggerContext {
 	private OsgiLogger osgiLogger;
 	private OsgiLogger osgiLoggerTestCase;
 	
-	private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss,SSS");
+	private DateFormat dateFormat;
 	
 	
 	public boolean isInitialized() {
@@ -191,7 +191,10 @@ public class TestLoggerContext {
 	 * call to init()
 	 */
 	public void shutdown() {
-		osgiLogger.stop();
+		if (osgiLogger != null){
+			osgiLogger.stop();
+			osgiLogger = null;	
+		}
 		
 		if (isTestCaseInitialized()){
 			shutdownTestCase();
@@ -205,7 +208,6 @@ public class TestLoggerContext {
 			}
 			lnr = null;
 		}
-		osgiLogger = null;
 	}
 
 	/**
@@ -215,9 +217,8 @@ public class TestLoggerContext {
 	public void shutdownTestCase() {		
 		if (osgiLoggerTestCase != null){
 			osgiLoggerTestCase.stop();	
+			osgiLoggerTestCase = null;
 		}
-		
-		osgiLogger = null;
 	}
 
 	public String getLogFileName() {

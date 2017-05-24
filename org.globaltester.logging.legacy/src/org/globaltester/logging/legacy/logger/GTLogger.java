@@ -318,7 +318,7 @@ public class GTLogger {
 		if (getBooleanPreference(PreferenceConstants.P_GT_USEISO8601LOGGING, true)) {
 			fileLayout = new PatternLayout("%d %-5p - %m%n");
 		} else {
-			fileLayout = new PatternLayout("%m%n");
+			fileLayout = new PatternLayout("%d{dd MMM yyyy HH:mm:ss,SSS} - %-5p -%m%n");
 		}
 
 		// settings for 'plain' logging

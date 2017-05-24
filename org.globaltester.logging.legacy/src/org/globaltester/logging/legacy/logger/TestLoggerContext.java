@@ -75,90 +75,6 @@ public class TestLoggerContext {
 	}
 
 	/**
-	 * Log printable object with level 'debug'
-	 * 
-	 * @param obj
-	 */
-	public void debug(Object obj) {
-		debug(obj.toString());
-	}
-
-	/**
-	 * Log string with level 'debug'
-	 * 
-	 * @param logString
-	 */
-	public void debug(String logString) {
-		GTLogger.getInstance().debug(logString);
-		if (isInitialized()) {
-			BasicLogger.log(logString, LogLevel.DEBUG);
-		}
-	}
-
-	/**
-	 * Log printable object with level 'error'
-	 * 
-	 * @param obj
-	 */
-	public void error(Object obj) {
-		error(obj.toString());
-	}
-
-	/**
-	 * Log string with level 'error'
-	 * 
-	 * @param logString
-	 */
-	public void error(String logString) {
-		GTLogger.getInstance().error(logString);
-		if (isInitialized()) {
-			BasicLogger.log(logString, LogLevel.ERROR);
-		}
-	}
-
-	/**
-	 * Log printable object with level 'fatal'
-	 * 
-	 * @param obj
-	 */
-	public void fatal(Object obj) {
-		fatal(obj.toString());
-	}
-
-	/**
-	 * Log string with level 'fatal'
-	 * 
-	 * @param logString
-	 */
-	public void fatal(String logString) {
-		GTLogger.getInstance().fatal(logString);
-		if (isInitialized()) {
-			BasicLogger.log(logString, LogLevel.FATAL);
-		}
-	}
-
-	/**
-	 * Log printable object with level 'info'
-	 * 
-	 * @param obj
-	 */
-	public void info(Object obj) {
-		info(obj.toString());
-	}
-
-	/**
-	 * Log string with level 'info'
-	 * 
-	 * @param logString
-	 */
-	public void info(String logString) {
-		GTLogger.getInstance().info(logString);
-		if (isInitialized()) {
-			BasicLogger.log(logString, LogLevel.INFO);
-		}
-	}
-
-	/**
 	 * Sets the logging level according to preferences
 	 */
 	public void setLevel() {
@@ -168,48 +84,6 @@ public class TestLoggerContext {
 
 		level = LogLevel.valueOf(PreferenceConstants.LOGLEVELS[Platform.getPreferencesService().getInt(Activator.PLUGIN_ID, PreferenceConstants.P_TEST_LOGLEVEL, 0,
 				null)]);
-	}
-
-	/**
-	 * Log printable object with level 'trace'
-	 * 
-	 * @param obj
-	 */
-	public void trace(Object obj) {
-		trace(obj.toString());
-	}
-
-	/**
-	 * Log string with level 'trace'
-	 * 
-	 * @param logString
-	 */
-	public void trace(String logString) {
-		GTLogger.getInstance().trace(logString);
-		if (isInitialized()) {
-			BasicLogger.log(logString, LogLevel.TRACE);
-		}
-	}
-
-	/**
-	 * Log printable object with level 'warn'
-	 * 
-	 * @param obj
-	 */
-	public void warn(Object obj) {
-		warn(obj.toString());
-	}
-
-	/**
-	 * Log string with level 'warn'
-	 * 
-	 * @param logString
-	 */
-	public void warn(String logString) {
-		GTLogger.getInstance().warn(logString);
-		if (isInitialized()) {
-			BasicLogger.log(logString, LogLevel.WARN);
-		}
 	}
 	
 	/**
@@ -316,9 +190,9 @@ public class TestLoggerContext {
 		}
 		
 		// Put info of new TestExecutable into log file(s)
-		info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -");
+		TestLogger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -");
 		String format = "Starting new test executable %-37s -"; //format the output to be 100 chars wide (including log4j start of line)
-		info(String.format(format, currentTestExecutable));
+		TestLogger.info(String.format(format, currentTestExecutable));
 		
 		try {
 			if (lnr != null) {
@@ -395,8 +269,8 @@ public class TestLoggerContext {
 		if (isTestCaseInitialized()) {
 			
 			String format = "End execution of %-49s -"; //format the output to be 100 chars wide (including log4j start of line)
-			info(String.format(format, currentTestExecutable));
-			info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -");
+			TestLogger.info(String.format(format, currentTestExecutable));
+			TestLogger.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -");
 			testCaseAppender.close();
 		}
 		testcaseInitialized = false;
@@ -451,12 +325,12 @@ public class TestLoggerContext {
 						Message message = MessageCoderJson.decode(entry.getMessage());
 						if (message != null){
 							// extracts log level and message from the encoded message
-							return date + message.getLogTags().stream()
+							return date + String.format("%-5s", message.getLogTags().stream()
 											.filter(p -> p.getId().equals(BasicLogger.LOG_LEVEL_TAG_ID)).findFirst().get()
-											.getAdditionalData()[0]
+											.getAdditionalData()[0])
 									+ " - " + message.getMessageContent();	
 						} else {
-							return date + entry.getMessage();
+							return date + String.format("%-5s", BasicLogger.convertOsgiToLogLevel(entry.getLevel()).name()) + " - " + entry.getMessage();
 						}
 						
 					}

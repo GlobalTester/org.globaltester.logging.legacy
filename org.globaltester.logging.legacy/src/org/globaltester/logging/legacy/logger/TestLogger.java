@@ -18,18 +18,18 @@ import org.globaltester.logging.tags.LogLevel;
 
 public class TestLogger {
 
-	private static Map<ThreadGroup, TestLoggerContext> loggers = new HashMap<>();
+	private static Map<ThreadGroup, TestLoggerContext> loggerContexts = new HashMap<>();
 		
 	public static boolean isInitialized() {
-		if (loggers.containsKey(Thread.currentThread().getThreadGroup())){
-			return loggers.get(Thread.currentThread().getThreadGroup()).isInitialized();
+		if (loggerContexts.containsKey(Thread.currentThread().getThreadGroup())){
+			return loggerContexts.get(Thread.currentThread().getThreadGroup()).isInitialized();
 		}
 		return false;
 	}
 
 	public static boolean isTestCaseInitialized() {
-		if (loggers.containsKey(Thread.currentThread().getThreadGroup())){
-			return loggers.get(Thread.currentThread().getThreadGroup()).isTestCaseInitialized();
+		if (loggerContexts.containsKey(Thread.currentThread().getThreadGroup())){
+			return loggerContexts.get(Thread.currentThread().getThreadGroup()).isTestCaseInitialized();
 		}
 		return false;
 	}
@@ -40,7 +40,7 @@ public class TestLogger {
 	 * @param obj
 	 */
 	public static void debug(Object obj) {
-		loggers.get(Thread.currentThread().getThreadGroup()).debug(obj.toString());
+		TestLogger.debug(obj.toString());
 	}
 
 	/**
@@ -171,10 +171,10 @@ public class TestLogger {
 	 * Initialize a the TestLogger for a new Test
 	 */
 	public static void init() {
-		if (!loggers.containsKey(Thread.currentThread().getThreadGroup())){
-			loggers.put(Thread.currentThread().getThreadGroup(), new TestLoggerContext());
+		if (!loggerContexts.containsKey(Thread.currentThread().getThreadGroup())){
+			loggerContexts.put(Thread.currentThread().getThreadGroup(), new TestLoggerContext());
 		}
-		loggers.get(Thread.currentThread().getThreadGroup()).init();		
+		loggerContexts.get(Thread.currentThread().getThreadGroup()).init();		
 	}
 
 	/**
@@ -185,10 +185,10 @@ public class TestLogger {
 	 *            manual directory
 	 */
 	public static void init(String defaultLoggingDir) {
-		if (!loggers.containsKey(Thread.currentThread().getThreadGroup())){
-			loggers.put(Thread.currentThread().getThreadGroup(), new TestLoggerContext());
+		if (!loggerContexts.containsKey(Thread.currentThread().getThreadGroup())){
+			loggerContexts.put(Thread.currentThread().getThreadGroup(), new TestLoggerContext());
 		}
-		loggers.get(Thread.currentThread().getThreadGroup()).init(defaultLoggingDir);
+		loggerContexts.get(Thread.currentThread().getThreadGroup()).init(defaultLoggingDir);
 	}
 
 	/**
@@ -199,7 +199,7 @@ public class TestLogger {
 	 *            testcase
 	 */
 	public static void initTestExecutable(String executableId) {
-		loggers.get(Thread.currentThread().getThreadGroup()).initTestExecutable(executableId);
+		loggerContexts.get(Thread.currentThread().getThreadGroup()).initTestExecutable(executableId);
 	}
 
 	/**
@@ -210,7 +210,7 @@ public class TestLogger {
 	 *            testcase
 	 */
 	public static void initTestCase(String testCaseId) {
-		loggers.get(Thread.currentThread().getThreadGroup()).initTestCase(testCaseId);
+		loggerContexts.get(Thread.currentThread().getThreadGroup()).initTestCase(testCaseId);
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class TestLogger {
 	 * call to init()
 	 */
 	public static void shutdown() {
-		loggers.get(Thread.currentThread().getThreadGroup()).shutdown();
+		loggerContexts.get(Thread.currentThread().getThreadGroup()).shutdown();
 	}
 
 	/**
@@ -226,7 +226,7 @@ public class TestLogger {
 	 * session log until the next call to initTestCase()
 	 */
 	public static void shutdownTestExecutableLogger() {
-		loggers.get(Thread.currentThread().getThreadGroup()).shutdownTestExecutableLogger();
+		loggerContexts.get(Thread.currentThread().getThreadGroup()).shutdownTestExecutableLogger();
 	}
 
 	/**
@@ -234,11 +234,11 @@ public class TestLogger {
 	 * session log until the next call to initTestCase()
 	 */
 	public static void shutdownTestCaseLogger() {
-		loggers.get(Thread.currentThread().getThreadGroup()).shutdownTestCaseLogger();
+		loggerContexts.get(Thread.currentThread().getThreadGroup()).shutdownTestCaseLogger();
 	}
 
 	public static String getLogFileName() {
-		return loggers.get(Thread.currentThread().getThreadGroup()).getLogFileName();
+		return loggerContexts.get(Thread.currentThread().getThreadGroup()).getLogFileName();
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class TestLogger {
 	 * @return	 name of the current log file
 	 */
 	public static String getTestCaseLogFileName() {
-		return loggers.get(Thread.currentThread().getThreadGroup()).getTestCaseLogFileName();
+		return loggerContexts.get(Thread.currentThread().getThreadGroup()).getTestCaseLogFileName();
 	}
 
 	/**
@@ -259,15 +259,15 @@ public class TestLogger {
 	 * @return
 	 */
 	public static String getTestCaseLogFileName(String testCaseId) {
-		return loggers.get(Thread.currentThread().getThreadGroup()).getTestCaseLogFileName(testCaseId);
+		return loggerContexts.get(Thread.currentThread().getThreadGroup()).getTestCaseLogFileName(testCaseId);
 	}
 	
 	public static int getLogFileLine(){
-		return loggers.get(Thread.currentThread().getThreadGroup()).getLogFileLine();
+		return loggerContexts.get(Thread.currentThread().getThreadGroup()).getLogFileLine();
 	}
 	
 	public static String getLogDir() {
-		return loggers.get(Thread.currentThread().getThreadGroup()).getLogDir();
+		return loggerContexts.get(Thread.currentThread().getThreadGroup()).getLogDir();
 	}
 
 }

@@ -7,7 +7,6 @@ import java.util.Calendar;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.FileAppender;
-import org.apache.log4j.HTMLLayout;
 import org.apache.log4j.Layout;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -30,7 +29,6 @@ import org.globaltester.logging.legacy.preferences.PreferenceConstants;
 public class GTLogger {
 
 	private static final String APPENDER_PLAIN = "GTLogger_Plain_Appender";
-	private static final String APPENDER_HTML = "GTLogger_HTML_Appender";
 	private static final String APPENDER_CONSOLE = "GTLogger_Console_Appender";
 	public static final String DEFAULT_DATE_FORMAT = "yyyyMMdd_HHmmss";
 
@@ -46,7 +44,6 @@ public class GTLogger {
 	private Logger logger;
 
 	private FileAppender fileAppenderPlain;
-	private FileAppender fileAppenderHtml;
 	private ConsoleAppender consoleAppender;
 
 	/**
@@ -358,25 +355,6 @@ public class GTLogger {
 			logger.removeAppender(APPENDER_CONSOLE);
 		}
 
-		//settings for html file
-		if (getBooleanPreference(PreferenceConstants.P_GT_HTMLLOGGING, false)) {
-			if (fileAppenderHtml == null) {
-				HTMLLayout htmlLayout = new HTMLLayout();
-				htmlLayout.setTitle(htmlFileName);
-				try {
-					fileAppenderHtml = new FileAppender(htmlLayout,
-							htmlFileName);
-					fileAppenderHtml.setName(APPENDER_HTML);
-					logger.addAppender(fileAppenderHtml);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			fileAppenderHtml.setFile(htmlFileName);
-		} else {
-			htmlFileName = "";
-			logger.removeAppender(APPENDER_HTML);
-		}
 
 	}
 	

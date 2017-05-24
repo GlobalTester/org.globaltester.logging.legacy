@@ -435,6 +435,10 @@ public class TestLoggerContext {
 	}
 
 	private LogListenerConfig getConfig(DateFormat dateFormat, LogLevel maxLevel){
+		LogFilter presetFilter = new AndFilter(
+				new TagFilter(BasicLogger.LOG_LEVEL_TAG_ID, Mode.AT_LEAST_ONE, LogLevel.getUpToAsNames(level)),
+				new TagFilter(BasicLogger.ORIGIN_THREAD_GROUP_TAG_ID, Thread.currentThread().getThreadGroup().getName()));
+		
 		return new LogListenerConfig() {
 			
 			@Override
@@ -443,21 +447,25 @@ public class TestLoggerContext {
 					
 					@Override
 					public String format(LogEntry entry) {
+						String date = dateFormat.format(new Date(entry.getTime())) + " - ";
 						Message message = MessageCoderJson.decode(entry.getMessage());
-						return dateFormat.format(new Date(entry.getTime())) + " "
-								+ message.getLogTags().stream()
-										.filter(p -> p.getId().equals(BasicLogger.LOG_LEVEL_TAG_ID)).findFirst().get()
-										.getAdditionalData()[0]
-								+ " - " + message.getMessageContent();
+						if (message != null){
+							// extracts log level and message from the encoded message
+							return date + message.getLogTags().stream()
+											.filter(p -> p.getId().equals(BasicLogger.LOG_LEVEL_TAG_ID)).findFirst().get()
+											.getAdditionalData()[0]
+									+ " - " + message.getMessageContent();	
+						} else {
+							return date + entry.getMessage();
+						}
+						
 					}
 				};
 			}
 			
 			@Override
 			public LogFilter getFilter() {
-				return new AndFilter(
-						new TagFilter(BasicLogger.LOG_LEVEL_TAG_ID, Mode.AT_LEAST_ONE, LogLevel.getUpToAsNames(level)),
-						new TagFilter(BasicLogger.ORIGIN_THREAD_GROUP_TAG_ID, Thread.currentThread().getThreadGroup().getName()));
+				return presetFilter;
 			}
 		};
 	}

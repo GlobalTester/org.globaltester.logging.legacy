@@ -15,7 +15,6 @@ import org.globaltester.logging.filelogger.OsgiLogger;
 import org.globaltester.logging.filter.AndFilter;
 import org.globaltester.logging.filter.LogFilter;
 import org.globaltester.logging.filter.TagFilter;
-import org.globaltester.logging.filter.TagFilter.Mode;
 import org.globaltester.logging.format.GtFileLogFormatter;
 import org.globaltester.logging.format.LogFormatService;
 import org.globaltester.logging.legacy.Activator;
@@ -234,7 +233,7 @@ public class TestLoggerContext {
 
 	private LogListenerConfig getConfig(DateFormat dateFormat, LogLevel maxLevel){
 		LogFilter filter = new AndFilter(
-				new TagFilter(BasicLogger.LOG_LEVEL_TAG_ID, Mode.AT_LEAST_ONE, LogLevel.getUpToAsNames(level)),
+				new TagFilter(BasicLogger.LOG_LEVEL_TAG_ID, LogLevel.getUpToAsNames(level)),
 				new TagFilter(BasicLogger.ORIGIN_THREAD_GROUP_TAG_ID, Thread.currentThread().getThreadGroup().getName()));
 		LogFormatService formatter = new GtFileLogFormatter(dateFormat);
 		

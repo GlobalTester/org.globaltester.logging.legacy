@@ -8,10 +8,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.apache.log4j.FileAppender;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
-import org.eclipse.jface.preference.IPreferenceStore;
 import org.globaltester.logging.BasicLogger;
 import org.globaltester.logging.LogListenerConfig;
 import org.globaltester.logging.Message;
@@ -41,22 +39,15 @@ public class TestLoggerContext {
 	private static final DateFormat DATE_FORMAT_GT = new SimpleDateFormat("yyyy-MM-dd' 'HH:mm:ss,SSS");
 	private static final DateFormat DATE_FORMAT_ISO = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 
-	// Appender for single log files per test case
-	private FileAppender testCaseAppender = null;
-
 	// where to log
 	private String logDir;
 	private String logDate;
 	private String logFileName;
 	private String testCaseLogFileName;
-	private String currentTestExecutable;
 	
 	//line number of log file
 	private Integer logFileLine;
 	private LineNumberReader lnr;
-
-	private boolean initialized;
-	private boolean testcaseInitialized;
 	
 	private LogLevel level;
 	private OsgiLogger osgiLogger;
@@ -66,12 +57,12 @@ public class TestLoggerContext {
 	
 	
 	public boolean isInitialized() {
-		return initialized;
+		return osgiLogger != null;
 	}
 	
 
 	public boolean isTestCaseInitialized() {
-		return testcaseInitialized;
+		return osgiLoggerTestCase != null;
 	}
 
 	/**
@@ -124,8 +115,6 @@ public class TestLoggerContext {
 		} catch (IOException e1) {
 			GtErrorLogger.log(Activator.PLUGIN_ID, e1);
 		}
-	
-		//FIXME configure file logger file name
 		
 		try {
 			if (lnr != null) {
@@ -135,7 +124,6 @@ public class TestLoggerContext {
 		} catch (IOException e) {
 			GtErrorLogger.log(Activator.PLUGIN_ID, e);
 		}
-		initialized = true;
 		
 	}
 
@@ -154,19 +142,17 @@ public class TestLoggerContext {
 	/**
 	 * Initialize the TestLogger for a new TestCase
 	 * 
-	 * @param executableId
+	 * @param testCaseId
 	 *            will be used as part of the logfile name of the current
 	 *            testcase
 	 */
-	public void initTestExecutable(String executableId) {
+	public void initTestCase(String testCaseId) {
 		if (!isInitialized()) {
 			throw new RuntimeException(
 					"TestLogger must be initialized before initializing for a testcase");
 		}
 	
-		shutdownTestExecutableLogger();
-		
-		currentTestExecutable = executableId;
+		shutdownTestCase();
 	
 		// do not setup the logfile if single logging is disabled in the
 		// preferences
@@ -177,7 +163,7 @@ public class TestLoggerContext {
 			return;
 		}
 	
-		testCaseLogFileName = getTestCaseLogFileName(executableId);
+		testCaseLogFileName = getTestCaseLogFileName(testCaseId);
 	
 		FileLogger logger;
 		try {
@@ -189,11 +175,6 @@ public class TestLoggerContext {
 			GtErrorLogger.log(Activator.PLUGIN_ID, e1);
 		}
 		
-		// Put info of new TestExecutable into log file(s)
-		TestLogger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -");
-		String format = "Starting new test executable %-37s -"; //format the output to be 100 chars wide (including log4j start of line)
-		TestLogger.info(String.format(format, currentTestExecutable));
-		
 		try {
 			if (lnr != null) {
 				lnr.close();
@@ -203,45 +184,6 @@ public class TestLoggerContext {
 			GtErrorLogger.log(Activator.PLUGIN_ID, e);
 		}
 		
-		testcaseInitialized = true;
-	}
-
-	/**
-	 * Initialize the TestLogger for a new TestCase
-	 * 
-	 * @param testCaseId
-	 *            will be used as part of the logfile name of the current
-	 *            testcase
-	 */
-	public void initTestCase(String testCaseId) {
-		if (!isInitialized()) {
-			throw new RuntimeException(
-					"TestLogger must be initialized before initializing for a testcase");
-		}
-		
-		shutdownTestCaseLogger();
-		
-		//do not setup the logfile if single logging is disabled in the preferences
-		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		if (!store.getBoolean(PreferenceConstants.P_TEST_LOG_SINGLE_TESTCASES)) {
-			testCaseLogFileName = "";
-			return;
-		} 
-	
-		testCaseLogFileName = getTestCaseLogFileName(testCaseId);
-
-		
-		FileLogger logger;
-		try {
-			logger = new FileLogger(new File(testCaseLogFileName));
-			logger.setConfig(getConfig(dateFormat, LogLevel.ERROR));
-			osgiLoggerTestCase = new OsgiLogger(Activator.getDefault().getBundle().getBundleContext(), logger);
-			osgiLoggerTestCase.start();
-		} catch (IOException e) {
-			GtErrorLogger.log(Activator.PLUGIN_ID, e);
-		}
-		
-		testcaseInitialized = true;
 	}
 
 	/**
@@ -250,6 +192,11 @@ public class TestLoggerContext {
 	 */
 	public void shutdown() {
 		osgiLogger.stop();
+		
+		if (isTestCaseInitialized()){
+			shutdownTestCase();
+		}
+		
 		if (lnr != null) {
 			try {
 				lnr.close();
@@ -258,36 +205,19 @@ public class TestLoggerContext {
 			}
 			lnr = null;
 		}
-		initialized = false;;
+		osgiLogger = null;
 	}
 
 	/**
 	 * Dispose the TestCaseLogger, following log messages will go only to the
 	 * session log until the next call to initTestCase()
 	 */
-	public void shutdownTestExecutableLogger() {
-		if (isTestCaseInitialized()) {
-			
-			String format = "End execution of %-49s -"; //format the output to be 100 chars wide (including log4j start of line)
-			TestLogger.info(String.format(format, currentTestExecutable));
-			TestLogger.info("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -");
-			testCaseAppender.close();
-		}
-		testcaseInitialized = false;
+	public void shutdownTestCase() {		
 		if (osgiLoggerTestCase != null){
 			osgiLoggerTestCase.stop();	
 		}
-	}
-
-	/**
-	 * Dispose the TestCaseLogger, following log messages will go only to the
-	 * session log until the next call to initTestCase()
-	 */
-	public void shutdownTestCaseLogger() {
-		testcaseInitialized = false;
-		if (osgiLoggerTestCase != null){
-			osgiLoggerTestCase.stop();	
-		}
+		
+		osgiLogger = null;
 	}
 
 	public String getLogFileName() {

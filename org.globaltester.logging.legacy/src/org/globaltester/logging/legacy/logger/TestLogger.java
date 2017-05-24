@@ -194,17 +194,6 @@ public class TestLogger {
 	/**
 	 * Initialize the TestLogger for a new TestCase
 	 * 
-	 * @param executableId
-	 *            will be used as part of the logfile name of the current
-	 *            testcase
-	 */
-	public static void initTestExecutable(String executableId) {
-		loggerContexts.get(Thread.currentThread().getThreadGroup()).initTestExecutable(executableId);
-	}
-
-	/**
-	 * Initialize the TestLogger for a new TestCase
-	 * 
 	 * @param testCaseId
 	 *            will be used as part of the logfile name of the current
 	 *            testcase
@@ -222,19 +211,11 @@ public class TestLogger {
 	}
 
 	/**
-	 * Dispose the TestCaseLogger, following log messages will go only to the
+	 * Dispose the TestCase logger, following log messages will go only to the
 	 * session log until the next call to initTestCase()
 	 */
-	public static void shutdownTestExecutableLogger() {
-		loggerContexts.get(Thread.currentThread().getThreadGroup()).shutdownTestExecutableLogger();
-	}
-
-	/**
-	 * Dispose the TestCaseLogger, following log messages will go only to the
-	 * session log until the next call to initTestCase()
-	 */
-	public static void shutdownTestCaseLogger() {
-		loggerContexts.get(Thread.currentThread().getThreadGroup()).shutdownTestCaseLogger();
+	public static void shutdownTestCase() {
+		loggerContexts.get(Thread.currentThread().getThreadGroup()).shutdownTestCase();
 	}
 
 	public static String getLogFileName() {

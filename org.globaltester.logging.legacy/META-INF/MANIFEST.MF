@@ -11,7 +11,9 @@ Require-Bundle: org.globaltester.base,
  org.eclipse.swt,
  org.eclipse.core.runtime,
  org.globaltester.logging,
- org.globaltester.logging.fileLogger
+ org.globaltester.logging.fileLogger,
+ org.eclipse.core.resources,
+ org.eclipse.core.filesystem
 Bundle-RequiredExecutionEnvironment: JavaSE-1.8
 Bundle-ActivationPolicy: lazy; exclude:="org.globaltester.logging.content"
 Bundle-ClassPath: lib/log4j-1.2.14.jar,

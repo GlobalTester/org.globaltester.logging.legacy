@@ -10,6 +10,9 @@ package org.globaltester.logging.legacy.preferences;
  */
 
 public class PreferenceConstants {
+	
+	private PreferenceConstants(){
+	}
 
 	// directory name of logging files
 	public static final String P_GT_LOGGINGDIR = "GT Framework - Logging directory";

@@ -17,6 +17,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.globaltester.logging.legacy.Activator;
+import org.globaltester.logging.legacy.LinkedLogDirHelper;
 import org.globaltester.logging.legacy.logger.GTLogger;
 
 /**
@@ -66,52 +67,11 @@ public class GlobalTesterPreferencePageLogging extends
 	Label lblSimMinLevel;
 	Label lblSimMaxLevel;
 
-	//variables needed for enabling/disabling of FieldEditors
-	private boolean manualFrameworkDirSetting; // whether framework logging directory is manually selected
-	private boolean manualTestDirSetting; // whether test logging directory is manually selected
-
 	public GlobalTesterPreferencePageLogging() {
 		super(GRID);
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
 		setPreferenceStore(store);
 		setDescription("GlobalTester preference page");
-
-		manualFrameworkDirSetting = store
-				.getBoolean(PreferenceConstants.P_MANUALFRAMEWORKDIRSETTINGS);
-		
-		manualTestDirSetting = store
-				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
-	}
-	
-	
-	/**
-	 * Checks if necessary options for workspace refreshing are checked. If not
-	 * it shows an error in the headline of the pref page.
-	 * 
-	 * @return true if all prefs are set or false if not
-	 */
-	private boolean workspacePrefsOk(){
-		// get workspace preferences
-		boolean refreshOpt = Platform.getPreferencesService().getBoolean("org.eclipse.core.resources", "refresh.enabled", false, null);
-		boolean refreshLightOpt = Platform.getPreferencesService().getBoolean("org.eclipse.core.resources", "refresh.lightweight.enabled", false, null);
-		String warn;
-		
-		if(!refreshOpt && !refreshLightOpt){
-			warn = "Also set 'Refresh using native hook or polling' and 'Refresh on Access' in your workspace preferences (General->Workspace)";
-			setErrorMessage(warn);
-			return false;
-		}
-		if(!refreshOpt){
-			warn = "Also set 'Refresh using native hook or polling' in your workspace preferences (General->Workspace)";
-			setErrorMessage(warn);
-			return false;
-		}
-		if(!refreshLightOpt){
-			warn = "Also set 'Refresh on Access' in your workspace preferences (General->Workspace)";
-			setErrorMessage(warn);
-			return false;
-		}
-		return true;
 	}
 
 	/**
@@ -157,7 +117,7 @@ public class GlobalTesterPreferencePageLogging extends
 				PreferenceConstants.P_GT_LOGGINGDIR,
 				"&Framework logging directory:", compFrameworkDirEditor);
 		dfeFrameworkLoggingDir.setEmptyStringAllowed(false);
-		dfeFrameworkLoggingDir.setEnabled(manualFrameworkDirSetting, compFrameworkDirEditor);
+		dfeFrameworkLoggingDir.setEnabled(getPreferenceStore().getBoolean(PreferenceConstants.P_MANUALFRAMEWORKDIRSETTINGS), compFrameworkDirEditor);
 		addField(dfeFrameworkLoggingDir);
 		
 		
@@ -233,11 +193,11 @@ public class GlobalTesterPreferencePageLogging extends
 		gd_compTestDirEditor.grabExcessHorizontalSpace = true;
 		compTestDirEditor.setLayoutData(gd_compTestDirEditor);
 		
-		dfeTestLoggingDir = new DirectoryFieldEditor(
+		dfeTestLoggingDir = new StaticLogDirectoryFieldEditor(
 				PreferenceConstants.P_TEST_LOGGINGDIR,
 				"&Test logging directory:", compTestDirEditor);
 		dfeTestLoggingDir.setEmptyStringAllowed(false);
-		dfeTestLoggingDir.setEnabled(manualTestDirSetting, compTestDirEditor);
+		dfeTestLoggingDir.setEnabled(getPreferenceStore().getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS), compTestDirEditor);
 		addField(dfeTestLoggingDir);
 		
 		bfeTestPersistentMarker = new BooleanFieldEditor(
@@ -297,80 +257,113 @@ public class GlobalTesterPreferencePageLogging extends
 
 	}
 
+	@Override
 	public void init(IWorkbench workbench) {
-
+		//no initialization needed
 	}
 
+	@Override
 	public void propertyChange(org.eclipse.jface.util.PropertyChangeEvent event) {
 		super.propertyChange(event);
+
 		if (event.getProperty().equals(FieldEditor.VALUE)) {
-
 			if (event.getSource() == bfeFrameworkManualSettings) {
-				manualFrameworkDirSetting = ((Boolean) event.getNewValue())
-						.booleanValue();
-				if (manualFrameworkDirSetting == true) {
-					dfeFrameworkLoggingDir.setEnabled(true,compFrameworkDirEditor);
-					if (dfeFrameworkLoggingDir.isValid() && dfeFrameworkLoggingDir.getStringValue() !="") {
-						setErrorMessage("");	
-						setValid(true);
-					} else {	
-						setErrorMessage("Use a valid directory!");
-						setValid(false);
-					}
-				} else {
-					dfeFrameworkLoggingDir.setEnabled(false,compFrameworkDirEditor);
-					setErrorMessage(null);
-					setValid(true);
-				}
+				dfeFrameworkLoggingDir.setEnabled(((Boolean) event.getNewValue()).booleanValue(),
+						compFrameworkDirEditor);
+			}
 
-
-
+			if (event.getSource() == bfeTestManualSettings) {
+				dfeTestLoggingDir.setEnabled(((Boolean) event.getNewValue()).booleanValue(), compTestDirEditor);
 			}
 			
-			if (event.getSource() == bfeTestManualSettings) {
-				manualTestDirSetting = ((Boolean) event.getNewValue())
-						.booleanValue();
-				if (manualTestDirSetting == true) {
-					dfeTestLoggingDir.setEnabled(true, compTestDirEditor);
-					if (dfeTestLoggingDir.isValid() && dfeTestLoggingDir.getStringValue() !=""	) {
-						
-						if (workspacePrefsOk()) {
-							//everything is ok
-							setErrorMessage(null);
-							setValid(true);
-						}else{
-							//workspace prefs not set as required
-//							setValid(false);
-						}
-					} else {	
-						setErrorMessage("Use a valid directory!");
-						setValid(false);
-					}
-				} else {
-					dfeTestLoggingDir.setEnabled(false, compTestDirEditor);
-					setErrorMessage(null);
-					setValid(true);
-				}
-
-
-
-			}
-						
+			checkState();
 		}
+
+	}
+	
+	@Override
+    protected void checkState() {
+		setErrorMessage(null);
+		super.checkState();
+		if (!validateManualFrameworkLogSettings()) return;
+		if (!validateManualTestLogSettings()) return;
 	}
 
+
+	private boolean validateManualFrameworkLogSettings() {		
+		if (bfeFrameworkManualSettings.getBooleanValue()) {
+			if (!dfeFrameworkLoggingDir.isValid() || "".equals(dfeFrameworkLoggingDir.getStringValue())) {
+				setErrorMessage("Use a valid directory for framework logging!");
+				setValid(false);
+				return false;
+			}
+			
+			return validateRequiredWorkspaceRefreshPrefs();
+		}
+		return true;
+	}
+
+
+	private boolean validateManualTestLogSettings() {
+		if (bfeTestManualSettings.getBooleanValue()) {
+			if (!dfeTestLoggingDir.isValid() || "".equals(dfeTestLoggingDir.getStringValue())) {
+				setErrorMessage("Use a valid directory for test logging!");
+				setValid(false);
+				return false;
+			}
+			
+			if (!LinkedLogDirHelper.canBeLinkedAsLogDir(dfeTestLoggingDir.getStringValue())) {
+				setErrorMessage("Selected static logging directory can not be properly linked into the workspace (possible reason: another directory with same name is already present.");
+				setValid(false);
+				return false;
+			}
+			
+			return validateRequiredWorkspaceRefreshPrefs();
+			
+		}
+		return true;
+	}
+	
+	
+	/**
+	 * Checks if necessary options for workspace refreshing are checked. If not
+	 * it shows an error in the headline of the pref page.
+	 * 
+	 * @return true if all prefs are set or false if not
+	 */
+	private boolean validateRequiredWorkspaceRefreshPrefs(){
+		// get workspace preferences
+		boolean refreshOpt = Platform.getPreferencesService().getBoolean("org.eclipse.core.resources", "refresh.enabled", false, null);
+		boolean refreshLightOpt = Platform.getPreferencesService().getBoolean("org.eclipse.core.resources", "refresh.lightweight.enabled", false, null);
+		
+		
+		if(!refreshOpt && !refreshLightOpt){
+			setErrorMessage("Also set 'Refresh using native hook or polling' and 'Refresh on Access' in your workspace preferences (General->Workspace)");
+			setValid(false);
+			return false;
+		}
+		if(!refreshOpt){
+			setErrorMessage("Also set 'Refresh using native hook or polling' in your workspace preferences (General->Workspace)");
+			setValid(false);
+			return false;
+		}
+		if(!refreshLightOpt){
+			setErrorMessage("Also set 'Refresh on Access' in your workspace preferences (General->Workspace)");
+			setValid(false);
+			return false;
+		}
+		return true;
+	}
+
+	@Override
 	protected void performDefaults() {
 		super.performDefaults();
 		GTLogger.getInstance().debug(
 				"Switched GT Logging Preference Page back do default values");
 
-		//enable/disable test logging options
-		manualTestDirSetting = Activator.getDefault().getPreferenceStore()
-				.getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS);
-
 		//enable or disable the loggingDir editor according to selection
-		dfeFrameworkLoggingDir.setEnabled(manualFrameworkDirSetting, compFrameworkDirEditor);
-		dfeTestLoggingDir.setEnabled(manualTestDirSetting, compTestDirEditor);
+		dfeFrameworkLoggingDir.setEnabled(getPreferenceStore().getBoolean(PreferenceConstants.P_MANUALFRAMEWORKDIRSETTINGS), compFrameworkDirEditor);
+		dfeTestLoggingDir.setEnabled(getPreferenceStore().getBoolean(PreferenceConstants.P_MANUALDIRSETTINGS), compTestDirEditor);
 		
 		//disable the simulator logging
 		bfeSimPlainLogger.setEnabled(false, simOptionsGroup);

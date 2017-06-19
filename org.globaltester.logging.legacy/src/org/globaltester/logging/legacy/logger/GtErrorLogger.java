@@ -5,19 +5,33 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.osgi.framework.Bundle;
 
-public class GtErrorLogger {
+public final class GtErrorLogger {
+	
+	private GtErrorLogger(){
+		//no instances intended
+	}
 
 	/**
-	 * Log an exception to the appropriate bundle logfile
+	 * Log an exception to the appropriate bundle log
 	 * @param pluginID
 	 * @param ex
 	 */
 	public static void log(String pluginID, Exception ex) {
-		Bundle bundle;
+		log(pluginID, ex.getLocalizedMessage(), ex);
+	}
+
+	/**
+	 * Log an exception to the appropriate bundle log
+	 * @param pluginID
+	 * @param message
+	 * @param ex
+	 */
+	public static void log(String pluginID, String message, Exception ex) {
 		Status status = new Status(IStatus.WARNING, pluginID,
-				ex.getLocalizedMessage(), ex);
-		bundle = Platform.getBundle(pluginID);
+				message, ex);
+		Bundle bundle = Platform.getBundle(pluginID);
 		Platform.getLog(bundle).log(status);
+		
 	}
 
 }

@@ -25,7 +25,7 @@ import org.globaltester.logging.legacy.logger.TestLogger;
  * @author amay
  *
  */
-public class LinkedLogDirHelper {
+public final class LinkedLogDirHelper {
 
 	public static final String LINKED_LOG_WORKSPACE_PROJECT_NAME = "GTLogFiles";
 
@@ -33,7 +33,7 @@ public class LinkedLogDirHelper {
 	 * Empty constructor to hide the public implicit one
 	 */
 	private LinkedLogDirHelper() {
-	};
+	}
 
 	/**
 	 * Checks the existence of the given Project by name and returns it. If it

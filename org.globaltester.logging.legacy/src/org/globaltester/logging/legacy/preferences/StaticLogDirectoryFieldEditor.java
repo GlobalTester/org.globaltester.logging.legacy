@@ -14,11 +14,11 @@ import org.eclipse.swt.widgets.Composite;
 public class StaticLogDirectoryFieldEditor extends DirectoryFieldEditor {
 
 	public StaticLogDirectoryFieldEditor(String name, String labelText, Composite parent) {
-		init(name, labelText);
-		setErrorMessage(JFaceResources.getString("DirectoryFieldEditor.errorMessage"));//$NON-NLS-1$
-		setChangeButtonText(JFaceResources.getString("openBrowse"));//$NON-NLS-1$
-		setValidateStrategy(VALIDATE_ON_KEY_STROKE);
-		createControl(parent);
+		init(name, labelText); //NOSONAR legacy code
+		setErrorMessage(JFaceResources.getString("DirectoryFieldEditor.errorMessage"));//$NON-NLS-1$ //NOSONAR legacy code
+		setChangeButtonText(JFaceResources.getString("openBrowse"));//$NON-NLS-1$ //NOSONAR legacy code
+		setValidateStrategy(VALIDATE_ON_KEY_STROKE); //NOSONAR legacy code
+		createControl(parent); //NOSONAR legacy code
 	}
 
 	@Override

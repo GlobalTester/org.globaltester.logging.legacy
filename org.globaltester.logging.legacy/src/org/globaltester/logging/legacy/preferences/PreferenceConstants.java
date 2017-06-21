@@ -9,7 +9,7 @@ package org.globaltester.logging.legacy.preferences;
  * 
  */
 
-public class PreferenceConstants {
+public final class PreferenceConstants {
 	
 	private PreferenceConstants(){
 	}

@@ -79,6 +79,18 @@ public class TestLogger {
 	}
 
 	/**
+	 * Log string with level 'error'
+	 * 
+	 * @param logString
+	 */
+	public static void error(String logString, Exception e) {
+		GTLogger.getInstance().error(logString);
+		if (isInitialized()) {
+			BasicLogger.logException(logString, e, LogLevel.ERROR);
+		}
+	}
+
+	/**
 	 * Log printable object with level 'fatal'
 	 * 
 	 * @param obj

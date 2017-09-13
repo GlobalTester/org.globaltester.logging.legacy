@@ -339,17 +339,14 @@ public class GlobalTesterPreferencePageLogging extends
 		
 		if(!refreshOpt && !refreshLightOpt){
 			setErrorMessage("Also set 'Refresh using native hook or polling' and 'Refresh on Access' in your workspace preferences (General->Workspace)");
-			setValid(false);
 			return false;
 		}
 		if(!refreshOpt){
 			setErrorMessage("Also set 'Refresh using native hook or polling' in your workspace preferences (General->Workspace)");
-			setValid(false);
 			return false;
 		}
 		if(!refreshLightOpt){
 			setErrorMessage("Also set 'Refresh on Access' in your workspace preferences (General->Workspace)");
-			setValid(false);
 			return false;
 		}
 		return true;

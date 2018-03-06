@@ -306,9 +306,9 @@ public class GTLogger {
 		// setting logfile layout		
 		Layout fileLayout;
 		if (getBooleanPreference(PreferenceConstants.P_GT_USEISO8601LOGGING, true)) {
-			fileLayout = new PatternLayout("%d{yyyy-MM-ss'T'HH:mm:ss} - %-5p - %m%n");
+			fileLayout = new PatternLayout("%d{yyyy-MM-dd'T'HH:mm:ss} - %-5p - %m%n");
 		} else {
-			fileLayout = new PatternLayout("%d{yyyy-MM-ss HH:mm:ss,SSS} - %-5p -%m%n");
+			fileLayout = new PatternLayout("%d{yyyy-MM-dd HH:mm:ss,SSS} - %-5p -%m%n");
 		}
 
 		// settings for 'plain' logging

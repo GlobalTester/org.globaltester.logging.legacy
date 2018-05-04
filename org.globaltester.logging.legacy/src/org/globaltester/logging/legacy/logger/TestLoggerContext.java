@@ -98,9 +98,8 @@ public class TestLoggerContext {
 			dateFormat= GtFileLogFormatter.DATE_FORMAT_GT;
 		}
 			
-		FileLogger logger;
 		try {
-			logger = new FileLogger(new File(getLogFileName()));
+			FileLogger logger = new FileLogger(new File(getLogFileName())); //NOSONAR this is closed by the osgiLogger when that is stopped
 			logger.setConfig(getConfig(dateFormat, level));
 			osgiLogger = new OsgiLogger(Activator.getDefault().getBundle().getBundleContext(), logger);
 			osgiLogger.start();
@@ -112,7 +111,7 @@ public class TestLoggerContext {
 			if (lnr != null) {
 				lnr.close();
 			}
-			lnr = new LineNumberReader(new FileReader(new File(getLogFileName())));
+			lnr = new LineNumberReader(new FileReader(new File(getLogFileName()))); //NOSONAR
 		} catch (IOException e) {
 			GtErrorLogger.log(Activator.PLUGIN_ID, e);
 		}
@@ -157,9 +156,8 @@ public class TestLoggerContext {
 	
 		testCaseLogFileName = getTestCaseLogFileName(testCaseId);
 	
-		FileLogger logger;
 		try {
-			logger = new FileLogger(new File(testCaseLogFileName));
+			FileLogger logger = new FileLogger(new File(testCaseLogFileName));  //NOSONAR this is closed by the osgiLogger when that is stopped
 			logger.setConfig(getConfig(dateFormat, LogLevel.ERROR));
 			osgiLoggerTestCase = new OsgiLogger(Activator.getDefault().getBundle().getBundleContext(), logger);
 			osgiLoggerTestCase.start();
@@ -171,7 +169,7 @@ public class TestLoggerContext {
 			if (lnr != null) {
 				lnr.close();
 			}
-			lnr = new LineNumberReader(new FileReader(new File(getTestCaseLogFileName())));
+			lnr = new LineNumberReader(new FileReader(new File(getTestCaseLogFileName()))); //NOSONAR
 		} catch (IOException e) {
 			GtErrorLogger.log(Activator.PLUGIN_ID, e);
 		}

@@ -221,7 +221,9 @@ public class TestLogger {
 	 * call to init()
 	 */
 	public static void shutdown() {
-		loggerContexts.get(Thread.currentThread().getThreadGroup()).shutdown();
+		if (loggerContexts.containsKey(Thread.currentThread().getThreadGroup())){
+			loggerContexts.get(Thread.currentThread().getThreadGroup()).shutdown();
+		}
 	}
 
 	/**
@@ -229,7 +231,9 @@ public class TestLogger {
 	 * session log until the next call to initTestCase()
 	 */
 	public static void shutdownTestCase() {
-		loggerContexts.get(Thread.currentThread().getThreadGroup()).shutdownTestCase();
+		if (loggerContexts.containsKey(Thread.currentThread().getThreadGroup())){
+			loggerContexts.get(Thread.currentThread().getThreadGroup()).shutdownTestCase();
+		}
 	}
 
 	public static String getLogFileName() {

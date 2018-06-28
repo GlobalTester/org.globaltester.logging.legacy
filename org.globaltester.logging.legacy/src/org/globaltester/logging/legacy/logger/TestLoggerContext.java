@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
@@ -93,9 +94,9 @@ public class TestLoggerContext {
 		// settings for logfiles
 		if (prefService.getBoolean(Activator.PLUGIN_ID,
 				PreferenceConstants.P_TEST_USEISO8601LOGGING, true, null)) {
-			dateFormat = GtFileLogFormatter.DATE_FORMAT_ISO;
+			dateFormat = new SimpleDateFormat(GtFileLogFormatter.DATE_FORMAT_GT_ISO_STRING);
 		} else {
-			dateFormat= GtFileLogFormatter.DATE_FORMAT_GT;
+			dateFormat= new SimpleDateFormat(GtFileLogFormatter.DATE_FORMAT_GT_STRING);
 		}
 			
 		try {

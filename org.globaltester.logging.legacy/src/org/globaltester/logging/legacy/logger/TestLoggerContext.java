@@ -12,7 +12,6 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.globaltester.logging.BasicLogger;
 import org.globaltester.logging.LogListenerConfig;
 import org.globaltester.logging.filelogger.FileLogger;
-import org.globaltester.logging.filelogger.OsgiLogger;
 import org.globaltester.logging.filter.AndFilter;
 import org.globaltester.logging.filter.LogFilter;
 import org.globaltester.logging.filter.TagFilter;
@@ -43,19 +42,19 @@ public class TestLoggerContext {
 	private LineNumberReader lnr;
 	
 	private LogLevel level;
-	private OsgiLogger osgiLogger;
-	private OsgiLogger osgiLoggerTestCase;
+	private FileLogger fileLogger;
+	private FileLogger fileLoggerTestCase;
 	
 	private DateFormat dateFormat;
 	
 	
 	public boolean isInitialized() {
-		return osgiLogger != null;
+		return fileLogger != null;
 	}
 	
 
 	public boolean isTestCaseInitialized() {
-		return osgiLoggerTestCase != null;
+		return fileLoggerTestCase != null;
 	}
 
 	/**
@@ -100,10 +99,9 @@ public class TestLoggerContext {
 		}
 			
 		try {
-			FileLogger logger = new FileLogger(new File(getLogFileName())); //NOSONAR this is closed by the osgiLogger when that is stopped
-			logger.setConfig(getConfig(dateFormat, level));
-			osgiLogger = new OsgiLogger(Activator.getDefault().getBundle().getBundleContext(), logger);
-			osgiLogger.start();
+			fileLogger = new FileLogger(new File(getLogFileName())); //NOSONAR this is closed by the osgiLogger when that is stopped
+			fileLogger.setConfig(getConfig(dateFormat, level));
+			BasicLogger.addLogListener(fileLogger);
 		} catch (IOException e1) {
 			GtErrorLogger.log(Activator.PLUGIN_ID, e1);
 		}
@@ -158,10 +156,9 @@ public class TestLoggerContext {
 		testCaseLogFileName = getTestCaseLogFileName(testCaseId);
 	
 		try {
-			FileLogger logger = new FileLogger(new File(testCaseLogFileName));  //NOSONAR this is closed by the osgiLogger when that is stopped
-			logger.setConfig(getConfig(dateFormat, LogLevel.ERROR));
-			osgiLoggerTestCase = new OsgiLogger(Activator.getDefault().getBundle().getBundleContext(), logger);
-			osgiLoggerTestCase.start();
+			FileLogger osgiLoggerTestCase = new FileLogger(new File(testCaseLogFileName));  //NOSONAR this is closed by the osgiLogger when that is stopped
+			osgiLoggerTestCase.setConfig(getConfig(dateFormat, LogLevel.ERROR));
+			BasicLogger.addLogListener(osgiLoggerTestCase);
 		} catch (IOException e1) {
 			GtErrorLogger.log(Activator.PLUGIN_ID, e1);
 		}
@@ -182,9 +179,9 @@ public class TestLoggerContext {
 	 * call to init()
 	 */
 	public void shutdown() {
-		if (osgiLogger != null){
-			osgiLogger.stop();
-			osgiLogger = null;	
+		if (fileLogger != null){
+			BasicLogger.removeLogListener(fileLogger);
+			fileLogger = null;	
 		}
 		
 		if (isTestCaseInitialized()){
@@ -206,9 +203,9 @@ public class TestLoggerContext {
 	 * session log until the next call to initTestCase()
 	 */
 	public void shutdownTestCase() {		
-		if (osgiLoggerTestCase != null){
-			osgiLoggerTestCase.stop();	
-			osgiLoggerTestCase = null;
+		if (fileLoggerTestCase != null){
+			BasicLogger.removeLogListener(fileLoggerTestCase);
+			fileLoggerTestCase = null;
 		}
 	}
 

@@ -231,7 +231,7 @@ public class TestLoggerContext {
 		LogFilter filter = new AndFilter(
 				new TagFilter(BasicLogger.LOG_LEVEL_TAG_ID, LogLevel.getUpToAsNames(level)),
 				new TagFilter(BasicLogger.ORIGIN_THREAD_GROUP_TAG_ID, Thread.currentThread().getThreadGroup().getName()));
-		LogFormatService formatter = new GtFileLogFormatter(dateFormat);
+		LogFormatService formatter = new GtFileLogFormatter();
 		
 		return new LogListenerConfig() {
 			

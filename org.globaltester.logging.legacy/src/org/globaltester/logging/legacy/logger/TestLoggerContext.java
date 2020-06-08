@@ -156,9 +156,9 @@ public class TestLoggerContext {
 		testCaseLogFileName = getTestCaseLogFileName(testCaseId);
 	
 		try {
-			FileLogger osgiLoggerTestCase = new FileLogger(new File(testCaseLogFileName));  //NOSONAR this is closed by the osgiLogger when that is stopped
-			osgiLoggerTestCase.setConfig(getConfig(dateFormat, LogLevel.ERROR));
-			BasicLogger.addLogListener(osgiLoggerTestCase);
+			fileLoggerTestCase = new FileLogger(new File(testCaseLogFileName));  //NOSONAR this is closed by the osgiLogger when that is stopped
+			fileLoggerTestCase.setConfig(getConfig(dateFormat, LogLevel.ERROR));
+			BasicLogger.addLogListener(fileLoggerTestCase);
 		} catch (IOException e1) {
 			GtErrorLogger.log(Activator.PLUGIN_ID, e1);
 		}
@@ -204,6 +204,7 @@ public class TestLoggerContext {
 	 */
 	public void shutdownTestCase() {		
 		if (fileLoggerTestCase != null){
+			fileLoggerTestCase.shutdown();
 			BasicLogger.removeLogListener(fileLoggerTestCase);
 			fileLoggerTestCase = null;
 		}

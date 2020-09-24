@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PatternLayout;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.globaltester.logging.BasicLogger;
 import org.globaltester.logging.legacy.Activator;
 import org.globaltester.logging.legacy.preferences.PreferenceConstants;
 
@@ -78,6 +79,7 @@ public class GTLogger {
 	 * @param logString
 	 */
 	public void debug(String logString) {
+		logString = BasicLogger.breakLines(logString, BasicLogger.DEFAULT_LINE_BREAK_THRESHOLD);
 		logger.debug(logString);
 	}
 
@@ -87,7 +89,7 @@ public class GTLogger {
 	 * @param obj
 	 */
 	public void debug(Object obj) {
-		logger.debug(obj.toString());
+		this.debug(obj.toString());
 	}
 
 	/**
@@ -96,6 +98,7 @@ public class GTLogger {
 	 * @param logString
 	 */
 	public void trace(String logString) {
+		logString = BasicLogger.breakLines(logString, BasicLogger.DEFAULT_LINE_BREAK_THRESHOLD);
 		logger.trace(logString);
 	}
 
@@ -105,7 +108,7 @@ public class GTLogger {
 	 * @param obj
 	 */
 	public void trace(Object obj) {
-		logger.trace(obj.toString());
+		this.trace(obj.toString());
 	}
 
 	/**
@@ -114,6 +117,7 @@ public class GTLogger {
 	 * @param logString
 	 */
 	public void info(String logString) {
+		logString = BasicLogger.breakLines(logString, BasicLogger.DEFAULT_LINE_BREAK_THRESHOLD);
 		logger.info(logString);
 	}
 
@@ -123,7 +127,7 @@ public class GTLogger {
 	 * @param obj
 	 */
 	public void info(Object obj) {
-		logger.info(obj.toString());
+		this.info(obj.toString());
 	}
 
 	/**
@@ -132,6 +136,7 @@ public class GTLogger {
 	 * @param logString
 	 */
 	public void warn(String logString) {
+		logString = BasicLogger.breakLines(logString, BasicLogger.DEFAULT_LINE_BREAK_THRESHOLD);
 		logger.warn(logString);
 	}
 
@@ -141,7 +146,7 @@ public class GTLogger {
 	 * @param obj
 	 */
 	public void warn(Object obj) {
-		logger.warn(obj.toString());
+		this.warn(obj.toString());
 	}
 
 	/**
@@ -150,6 +155,7 @@ public class GTLogger {
 	 * @param logString
 	 */
 	public void error(String logString) {
+		logString = BasicLogger.breakLines(logString, BasicLogger.DEFAULT_LINE_BREAK_THRESHOLD);
 		logger.error(logString);
 
 	}
@@ -160,7 +166,7 @@ public class GTLogger {
 	 * @param obj
 	 */
 	public void error(Object obj) {
-		logger.error(obj.toString());
+		this.error(obj.toString());
 	}
 
 	/**
@@ -169,6 +175,7 @@ public class GTLogger {
 	 * @param logString
 	 */
 	public void fatal(String logString) {
+		logString = BasicLogger.breakLines(logString, BasicLogger.DEFAULT_LINE_BREAK_THRESHOLD);
 		logger.fatal(logString);
 	}
 
@@ -178,7 +185,7 @@ public class GTLogger {
 	 * @param obj
 	 */
 	public void fatal(Object obj) {
-		logger.fatal(obj.toString());
+		this.fatal(obj.toString());
 	}
 
 	/**

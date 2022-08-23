@@ -16,7 +16,7 @@ public final class GtErrorLogger {
 	 * @param pluginID
 	 * @param ex
 	 */
-	public static void log(String pluginID, Exception ex) {
+	public static void log(String pluginID, Throwable ex) {
 		log(pluginID, ex.getLocalizedMessage(), ex);
 	}
 
@@ -26,7 +26,7 @@ public final class GtErrorLogger {
 	 * @param message
 	 * @param ex
 	 */
-	public static void log(String pluginID, String message, Exception ex) {
+	public static void log(String pluginID, String message, Throwable ex) {
 		Status status = new Status(IStatus.WARNING, pluginID,
 				message, ex);
 		Bundle bundle = Platform.getBundle(pluginID);
